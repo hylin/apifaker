@@ -47,7 +47,7 @@ node apifaker.js
 192.168.1.3 api.example.com
 ```
 。
-这样在机器A上访问http://api.example.com/v1/get_user_info时，如果没有匹配上设置的模拟数据条件，则该工具会自动从机器B发起一个相同的请求访问http://api.example.com/v1/get_user_info，由于机器B上没有host，所以会去访问实际的api.example.com域名下的接口
+这样在机器A上访问http://api.example.com/v1/get_user_info 时，如果没有匹配上设置的模拟数据条件，则该工具会自动从机器B发起一个相同的请求访问http://api.example.com/v1/get_user_info ，由于机器B上没有host，所以会去访问实际的api.example.com域名下的接口
 
 ### License
 
