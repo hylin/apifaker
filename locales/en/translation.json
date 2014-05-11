@@ -1,0 +1,113 @@
+{
+  "siteName": "Api Faker",
+  "siteTitle": "Api Faker - A useful tool for front-end engineer",
+  "updateTime": "Update Time",
+  "createTime": "Create Time",
+  "operation": "Opertation",
+  "all": "All",
+  "simulate": "Simulate",
+  "delete": "Delete",
+  "add": "Add",
+  "edit": "Edit",
+  "submit": "Submit",
+  "search": "Search",
+  "searchApi": "Api Search",
+  "clickToRemove": "Click To Remove",
+  "clickToAdd": "Click To Add",
+  "addSimulator": "Add Simulator",
+  "status": "Status",
+  "menus": {
+    "list": "Api List",
+    "add": "Add Api"
+  },
+  "types": {
+    "string": "String",
+    "number": "Number",
+    "array": "Array",
+    "boolean": "Boolean",
+    "object": "Object"
+  },
+  "api": {
+    "name": "Api Name",
+    "developer": "Developer",
+    "project": "Project",
+    "purpose": "Purpose",
+    "desc": "Description",
+    "url": "Url",
+    "host": "Host",
+    "path": "Path",
+    "urlAddon": "Url Addon",
+    "type": "Type",
+    "httpType": "Http Type",
+    "params": "Params",
+    "paramName": "Name",
+    "paramValue": "Value",
+    "paramDesc": "Description",
+    "results": "Return Fields",
+    "resultName": "Key Name",
+    "resultType": "Type",
+    "resultDesc": "Description",
+    "demo": "Demo",
+    "other": "Other Settings",
+    "isSimulate": "Auto Simulate",
+    "isProxy": "Auto Proxy",
+    "status": {
+      "simulate": {
+        "true": "Simulating",
+        "false": "Simulate Stoped"
+      },
+      "proxy": {
+        "true": "In Proxy",
+        "false": "Proxy Stoped"
+      }
+    }
+  },
+  "simulator": {
+    "mark": "Simulator Name",
+    "params": "Set Match Params",
+    "results": "Set Results",
+    "matchValue": "Match Value"
+  },
+  "tips": {
+    "confirmDelete": "Confirm Delete?",
+    "deleteSuccess": "Delete Success",
+    "deleteFailed": "Delete Failed",
+    "operationSuccess": "Operate Success",
+    "operationFailed": "Operate Failed",
+    "demoFormatErr": "Format Demo data error",
+    "requireResultField": "Please fill all results field",
+    "requireParamField": "Please fill all params field",
+    "jsonFormatErr": "Format JSON data error",
+    "moveLeftToRight": "Sync Left To Right",
+    "moveRightToLeft": "Sync Right To Left",
+    "noData": "No Data",
+    "simulatorsOfApi": "Simulators of <span class=\"label label-info\">__apiName__</span>",
+    "simulatorsNum": "Total simulators number",
+    "saveSuccess": "Save success",
+    "saveFailed": "Save failed",
+    "requireId": "Id is required",
+    "dbError": "Databasee error",
+    "updateSuccess": "Update success",
+    "errorOccurred": "Error occurred",
+    "noRights": "No rights"
+  },
+  "help": {
+    "mark": "Input a name or mark",
+    "developer": "Input the developer of this api",
+    "name": "Input Api's Name or Mark,eg.'get_user_info'",
+    "purpose": "Input Api's purpose,eg.'Get user's infomation'",
+    "desc": "Input Api's usage,description and so on,eg.'this api support query by userid or username'",
+    "url": "eg.http://api.example.com/v1/get_user_info,input as bellows.<br>Host:http://api.example.com，Path:/v1/get_user_info,Url Addon:<br/>If Api is differentiated by param,please input it into 'Url Addon',otherwise donot input this field.<br/>eg.http://www.example.com/service?method=get_user_info,input 'method=get_user_info' into 'Url Addon' field",
+    "type": "Usually,should support both jsonp and json",
+    "httpType": "Suggest to support both",
+    "params": "If param has already included in 'Url' field,don't input again.",
+    "results": "Be sure choose proper type",
+    "demo": "Use blue button to Sync the content of two sides.<strong class=\"text-danger\">the content of left side is for submit，right side is for visual edit</strong>",
+    "simMark": "Give a name to this simulator.eg.'Success Return','Error Return'",
+    "simParams": "Simulator will return \"Set Results\" when query matched \"Set Match Params\"",
+    "simResults": "Use blue button to Sync the content of two sides.<br/>Input <span class=\"label label-primary\">$return$</span> to return what query brings in.<br/><strong class=\"text-danger\">the content of left side is for submit，right side is for visual edit</strong>",
+    "isSimulate": "You can temporary stop simulate",
+    "isProxy": "You can temporary stop proxy",
+    "mark": "Give a name to this simulator"
+  }
+}

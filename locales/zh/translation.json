@@ -1,0 +1,112 @@
+{
+  "siteName": "Api Faker",
+  "siteTitle": "Api Faker - 前端开发利器, Api模拟器",
+  "updateTime": "更新时间",
+  "createTime": "创建时间",
+  "operation": "操作",
+  "all": "全部",
+  "simulate": "模拟",
+  "delete": "删除",
+  "add": "添加",
+  "edit": "修改",
+  "submit": "提交",
+  "search": "搜索",
+  "searchApi": "搜索接口",
+  "clickToRemove": "点击移除该行",
+  "clickToAdd": "点击添加一行",
+  "addSimulator": "增加模拟数据",
+  "status": "状态",
+  "menus": {
+    "list": "接口列表",
+    "add": "添加接口"
+  },
+  "types": {
+    "string": "字符串",
+    "number": "数字",
+    "array": "数组",
+    "boolean": "布尔值",
+    "object": "对象"
+  },
+  "api": {
+    "name": "接口名",
+    "developer": "开发人",
+    "project": "所属项目",
+    "purpose": "接口用途",
+    "desc": "接口使用说明",
+    "url": "接口地址",
+    "host": "域名",
+    "path": "路径",
+    "urlAddon": "附加参数",
+    "type": "接口类型",
+    "httpType": "接口http类型",
+    "params": "接口参数",
+    "paramName": "参数名",
+    "paramValue": "值",
+    "paramDesc": "说明",
+    "results": "返回字段",
+    "resultName": "属性名",
+    "resultType": "类型",
+    "resultDesc": "说明",
+    "demo": "返回示例",
+    "other": "其它设置",
+    "isSimulate": "是否进行模拟",
+    "isProxy": "是否进行代理",
+    "status": {
+      "simulate": {
+        "true": "模拟中",
+        "false": "暂停模拟"
+      },
+      "proxy": {
+        "true": "代理中",
+        "false": "暂停代理"
+      }
+    }
+  },
+  "simulator": {
+    "mark": "模拟数据标识",
+    "params": "设置匹配参数值",
+    "results": "设置返回结果",
+    "matchValue": "匹配值"
+  },
+  "tips": {
+    "confirmDelete": "确认删除？",
+    "deleteSuccess": "删除成功",
+    "deleteFailed": "删除失败",
+    "operationSuccess": "操作成功",
+    "operationFailed": "操作失败",
+    "demoFormatErr": "返回结果解析json格式发生错误",
+    "requireResultField": "有返回结果属性名或属性说明未填写，请检查",
+    "requireParamField": "有参数名或参数说明未填写，请检查",
+    "jsonFormatErr": "解析json格式发生错误",
+    "moveLeftToRight": "将 [左侧] 内容同步到 [右侧] ",
+    "moveRightToLeft": "将 [右侧] 内容同步到 [左侧]",
+    "noData": "没有数据",
+    "simulatorsOfApi": "接口<span class=\"label label-info\">__apiName__</span>的模拟数据",
+    "simulatorsNum": "模拟数据个数",
+    "saveSuccess": "保存成功",
+    "saveFailed": "保存数据库失败",
+    "requireId": "id不能为空",
+    "dbError": "数据库错误",
+    "updateSuccess": "更新成功",
+    "errorOccurred": "发生错误",
+    "noRights": "没有权限"
+  },
+  "help": {
+    "developer": "填写接口开发人",
+    "name": "填写接口名称，接口标识。例如：get_user_info",
+    "purpose": "填写接口的使用用途。例如：获取用户基本信息",
+    "desc": "填写接口的使用说明、注意事项等。例如：接口支持传入用户id或者用户名称",
+    "url": "例如接口http://api.example.com/v1/get_user_info，则按如下方式填写。<br>域名：http://api.example.com，路径：/v1/get_user_info，附加参数：<br/>如果接口是通过参数来区分，请在附加参数里填写，否则不用填写附加参数。<br/>例如：http://www.example.com/service?method=get_user_info接口，则附加参数里填写method=get_user_info",
+    "type": "一般情况下jsonp和json应同时支持",
+    "httpType": "建议都支持",
+    "params": "如果接口地址中已经包含了的固定参数，就不要再次填写了。<br/>例如上面接口地址中示例的method参数，这里就不用填写",
+    "results": "请务必正确选择返回字段的类型",
+    "demo": "使用中间的蓝色按钮可以同步两侧内容，<strong class=\"text-danger\">提交时，以左侧内容为准，右侧只是辅助编辑json格式的</strong>",
+    "simMark": "给这个模拟数据取个名称标识吧，方便后续快速识别。例如：返回50条数据、后台异常返回、返回数据为空",
+    "simParams": "当请求url的参数匹配上面填写的值时，则模拟器会返回下面设置的结果",
+    "simResults": "使用中间的蓝色按钮可以同步两侧内容<br/>如果结果中有字段的值需要按对应相同参数的值原样返回，则字段值请填入 <span class=\"label label-primary\">$return$</span> <br/><strong class=\"text-danger\">提交时，以左侧内容为准，右侧只是辅助编辑json格式的</strong>",
+    "isSimulate": "如果取消勾选，则不会匹配任何请求；勾选了代理则转发请求，否则工具返回null",
+    "isProxy": "如果取消勾选，当没有匹配到设置的模拟数据时，工具会直接返回null",
+    "mark": "给模拟数据取个名字吧"
+  }
+}

@@ -1,0 +1,197 @@
+<% include inc/header.html %>
+
+<div class="container">
+    <div class="well">
+        <form class="form-horizontal" role="form" method="post" id="add-simulator-form">
+            <div class="form-group">
+                <label class="control-label col-md-2"><%=t('api.project')%>：</label>
+                <div class="col-md-2">
+                    <p class="form-control-static"><%=config.projects[apiInfo.project]%></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2"><%=t('api.name')%>：</label>
+                <div class="col-md-4">
+                    <p class="form-control-static"><%=apiInfo.name%></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2"><%=t('api.url')%>：</label>
+                <div class="col-md-6">
+                    <p class="form-control-static"><%=apiInfo.host+apiInfo.path+'?'+apiInfo.urlAddon%></p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="sim-mark" class="control-label col-md-2"><%=t('simulator.mark')%>：</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="sim-mark" value="<%=simulator.mark%>" required>
+                    <span class="help-block"><%-t('help.mark')%></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2"><%=t('simulator.params')%>：</label>
+                <div class="col-md-8" id="params-wrapper">
+
+                </div>
+            </div>
+            <hr/>
+            <div class="form-group">
+                <label class="control-label col-md-2"><%=t('simulator.results')%>：</label>
+                <div class="col-md-6">
+                    <span class="help-block"><%-t('help.simResults')%></span>
+                </div>
+            </div>
+            <div class="editor-wrapper clearfix">
+                <div class="editor-tools">
+                    <button type="button" class="btn btn-info btn-sm" title="<%=t('tips.moveLeftToRight')%>" data-action="to-right"><span class="glyphicon glyphicon-chevron-right"></span></button>
+                    <br/><br/>
+                    <button type="button" class="btn btn-info btn-sm" title="<%=t('tips.moveRightToLeft')%>" data-action="to-left"><span class="glyphicon glyphicon-chevron-left"></span></button>
+                </div>
+                <div id="jsoneditor-code" class="col-md-6">
+
+                </div>
+                <div id="jsoneditor-tree" class="col-md-6">
+
+                </div>
+            </div>
+            <hr/>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary center-block" id="add-api-submit"><%=t('submit')%></button>
+            </div>
+        </form>
+    </div>
+</div> <!-- /container -->
+
+<script src="<%=config.staticUrl%>assets/js/brand/jsoneditor-min.js"></script>
+<script src="<%=config.staticUrl%>assets/js/brand/ace-min.js"></script>
+<script src="<%=config.staticUrl%>assets/js/common.js"></script>
+
+<script type="text/javascript" >
+
+    ;(function(){
+        var params = [],
+                simParams = [],
+                $paramsWrapper = $('#params-wrapper');
+        try {
+            params = JSON.parse('<%-JSON.stringify(apiInfo.params)%>');
+            simParams = JSON.parse('<%-JSON.stringify(simulator.simParams)%>');
+        }catch (e){
+            params = [];
+        }
+        $.each(params, function(i,v){
+            addParamRow();
+            $paramsWrapper.find('[name="param-name"]').eq(i).val(v.name);
+            $paramsWrapper.find('[name="param-desc"]').eq(i).val(v.desc);
+            $.each(simParams, function(j,r){
+                if(v.name == r.name){
+                    $paramsWrapper.find('[name="param-value"]').eq(i).val(r.value);
+                }
+            });
+        });
+        $paramsWrapper.append('<span class="help-block"><%-t("help.simParams")%></span>');
+        var treeeditor = new jsoneditor.JSONEditor($('#jsoneditor-tree')[0]);
+        var codeeditor = new jsoneditor.JSONEditor($('#jsoneditor-code')[0], {mode:'code'});
+        var defaultSimResults = {
+            "retcode": 0,
+            "retmsg": "success",
+            "data": []
+        };
+        var simResults = null;
+        try {
+            simResults = JSON.parse('<%-JSON.stringify(simulator.simResults || apiInfo.demo)%>');
+        }catch (e){
+            simResults = defaultSimResults;
+        }
+        treeeditor.set(simResults);
+        codeeditor.set(simResults);
+
+        $('.editor-tools').on('click','[data-action]',function(){
+            var action = $(this).data('action');
+            try{
+                if(action == 'to-right'){
+                    treeeditor.set(codeeditor.get());
+                }else if (action == 'to-left'){
+                    codeeditor.set(treeeditor.get());
+                }
+            }catch (e){
+                alert('<%=t("tips.jsonFormatErr")%>：'+ e.message);
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        function addParamRow(){
+            var addParamTpl = '<div class="input-group margin-top-20" data-role="param-row">'
+                    +'<span class="input-group-addon"><%=t("api.paramName")%></span>'
+                    +'<input type="text" class="form-control disabled" value="" readonly name="param-name" required tabindex="-1">'
+                    +'<span class="input-group-addon"><%=t("api.paramValue")%></span>'
+                    +'<input type="text" class="form-control"  value="" name="param-value">'
+                    +'<span class="input-group-addon"><%=t("api.paramDesc")%></span>'
+                    +'<input type="text" class="form-control disabled" readonly value="" name="param-desc" required tabindex="-1">'
+                    +'</div>';
+            $paramsWrapper.append(addParamTpl);
+        }
+
+        $('#add-simulator-form').on('submit', function(e){
+            var params = {};
+
+            var defaultParams = [];
+            $paramsWrapper.find('[data-role="param-row"]').each(function(i,v){
+                var $this = $(this),
+                        name = $this.find('[name="param-name"]').val(),
+                        value = $this.find('[name="param-value"]').val(),
+                        desc = $this.find('[name="param-desc"]').val();
+                if(name && value && desc){
+                    defaultParams.push({
+                        name: name,
+                        value: value,
+                        desc: desc
+                    });
+                }
+            });
+            params.mark = $('#sim-mark').val();
+            params.simParams = defaultParams;
+            try{
+                params.simResults = codeeditor.get();
+            }catch (err){
+                alert('<%=t("tips.requireResultField")%>：'+ err.message);
+                e.preventDefault();
+                return false;
+            }
+            params.apiId = '<%=apiId%>';
+            var ajaxUrl = '<%=config.siteUrl%>simulator/add/<%=apiId%>';
+            <%
+            if(simulator && simulator._id){
+            %>
+                ajaxUrl = '<%=config.siteUrl%>simulator/edit/<%=simulator._id%>';
+                params._id = '<%=simulator._id%>';
+            <%}%>
+            console.log(params);
+            $.ajax({
+                type: 'post',
+                url: ajaxUrl,
+                data: {data: JSON.stringify(params)},
+                success: function(results){
+                    if(results.retcode == 0){
+                        alert(results.retmsg || '<%=t("tips.operationSuccess")%>');
+                        location.href = '<%=config.siteUrl%>simulators/<%=apiId%>';
+                    }else{
+                        alert(results.retmsg || '<%=t("tips.operationFailed")%>');
+                    }
+                    e.preventDefault();
+                    return false;
+                },
+                error: function(err){
+                    alert(err);
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            e.preventDefault();
+            return false;
+        });
+    })();
+
+
+</script>
+<% include inc/footer.html %>

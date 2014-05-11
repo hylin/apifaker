@@ -1,0 +1,76 @@
+<% include inc/header.html %>
+
+<div class="container">
+    <div class="well">
+        <h3><%-t("tips.simulatorsOfApi",{apiName:apiInfo.name})%></h3>
+        <p>
+            <%=t("api.url")%>: <span class="label label-info"><%=apiInfo.host+apiInfo.path+'?'+apiInfo.urlAddon%></span>
+        </p>
+        <p>
+            <%=t('tips.simulatorsNum')%>: <span class="label label-info"><%=simulators.length%></span>
+        </p>
+        <p>
+            <%=t('status')%>: <span class="label label-<%=apiInfo.isSimulate?'success':'warning'%>"><%=t('api.status.simulate.'+apiInfo.isSimulate)%></span>&nbsp;<span class="label label-<%=apiInfo.isProxy?'success':'warning'%>"><%=t('api.status.proxy.'+apiInfo.isProxy)%></span>
+        </p>
+        <p>
+            <a href="<%=config.siteUrl%>simulator/add/<%=apiInfo._id%>"><button type="button" class="btn btn-primary"><%=t("addSimulator")%></button></a>
+        </p>
+    </div>
+    <%
+    if(locals.simulators && simulators.length == 0){
+    %>
+    <div class="alert alert-info"><%=t("tips.noData")%></div>
+    <%
+    }
+    for(var i=0,len=simulators.length;i<len;i++){
+    %>
+    <div class="col-md-3">
+        <div class="thumbnail">
+            <div class="caption simulator-item">
+                <h3><a href="<%=config.siteUrl%>simulator/edit/<%=simulators[i]._id%>"><%=i+1%> - <%=simulators[i].mark%></a></a></h3>
+                <p>
+                    <%=t("updateTime")%>：<%=: simulators[i].updateTime | dateFormat:'%y-%M-%d %h:%m:%s'%>
+                    <br/>
+                    <%
+                    simulators[i].simParams.forEach(function(v){
+                    %>
+                    <%=t("api.paramName")%>：<%=v.name%>，<%=t("simulator.matchValue")%>：<%=v.value%><br/>
+                    <%
+                    });
+                    %>
+                </p>
+                <span class="label label-danger" data-action="delete" data-id="<%=simulators[i]._id%>"><%=t("delete")%></span>
+            </div>
+        </div>
+    </div>
+    <%}%>
+</div> <!-- /container -->
+<script src="<%=config.staticUrl%>assets/js/common.js"></script>
+        <script>
+            ;(function(){
+                $('.container').on('click','[data-action="delete"]', function(e){
+                    if(!confirm('<%=t("tips.confirmDelete")%>')){
+                        return false;
+                    }
+                    $.ajax({
+                        type: 'get',
+                        url: '<%=config.siteUrl%>simulator/delete/'+$(this).data('id'),
+                        success: function(results){
+                            if(results.retcode == 0){
+                                alert('<%=t("tips.deleteSuccess")%>');
+                                location.href = '<%=config.siteUrl%>simulators/<%=apiInfo._id%>';
+                            }else{
+                                alert(results.retmsg || '<%=t("tips.deleteFailed")%>');
+                            }
+                        },
+                        error: function(err){
+                            console.log(err);
+                            alert(err);
+                        }
+                    });
+                    return false;
+                });
+
+            })();
+        </script>
+<% include inc/footer.html %>

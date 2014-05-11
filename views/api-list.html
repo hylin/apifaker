@@ -1,0 +1,84 @@
+<% include inc/header.html %>
+
+<div class="container">
+    <div class="well well-sm">
+        <a href="<%=config.siteUrl%>"><button type="button" class="btn btn-default <%=activeProject('')%>"><%=t('all')%></button></a>
+        <div class="btn-group">
+            <%
+            for(var p in config.projects){
+            %>
+            <a href="<%=config.siteUrl%>?project=<%=p%>"><button type="button" class="btn btn-default <%if(project == p){%>active<%}%>"><%=config.projects[p]%></button></a>
+            <%
+            }
+            %>
+        </div>
+    </div>
+    <table class="table table-bordered table-hover table-striped" id="api-list-table">
+        <thead>
+            <tr>
+                <th><%=t('api.name')%></th>
+                <th><%=t('api.developer')%></th>
+                <th><%=t('api.project')%></th>
+                <th><%=t('api.url')%></th>
+                <th><%=t('status')%></th>
+                <th><%=t('updateTime')%></th>
+                <th style="width: 170px;"><%=t('operation')%></th>
+            </tr>
+        </thead>
+        <tbody>
+        <%
+        if(locals.list && list.length>0){
+            list.forEach(function(item){
+        %>
+            <tr>
+                <td><a href="<%=config.siteUrl%>apis/view/<%=item._id%>" target="_blank"><%=item.name%></a></td>
+                <td><%=item.developer%></td>
+                <td><%=config.projects[item.project]%></td>
+                <td><%=item.host+item.path+'?'+item.urlAddon%></td>
+                <td>
+                    <span class="js-tooltip label label-<%=item.isSimulate?'success':'warning'%>" data-toggle="tooltip" data-original-title="<%=t('api.status.simulate.'+item.isSimulate)%>">S</span>&nbsp;
+                    <span class="js-tooltip label label-<%=item.isProxy?'success':'warning'%>" data-toggle="tooltip" data-original-title="<%=t('api.status.proxy.'+item.isProxy)%>">P</span>
+                </td>
+                <td><%=: item.updateTime | dateFormat:'%y-%M-%d %h:%m:%s'%></td>
+                <td>
+                    <a href="<%=config.siteUrl%>apis/edit/<%=item._id%>"><button type="button" class="btn btn-primary btn-xs"><%=t('edit')%></button></a>&nbsp;<a href="<%=config.siteUrl%>simulators/<%=item._id%>" target="_blank"><button type="button" class="btn btn-info btn-xs"><%=t('simulate')%></button></a>&nbsp;<a href="<%=config.siteUrl%>apis/delete/<%=item._id%>" data-action="delete" data-id="<%=item._id%>"><button type="button" class="btn btn-danger btn-xs"><%=t('delete')%></button></a>
+                </td>
+            </tr>
+        <%
+            });
+        }else{
+        %>
+            <tr><td colspan="7" class="text-center"><%=t('tips.noData')%></td></tr>
+        <%}%>
+        </tbody>
+    </table>
+</div> <!-- /container -->
+<script src="<%=config.staticUrl%>assets/js/common.js"></script>
+        <script>
+            ;(function(){
+                $('#api-list-table').on('click','[data-action="delete"]', function(e){
+                    if(!confirm('<%=t("tips.confirmDelete")%>')){
+                        return false;
+                    }
+                    $.ajax({
+                        type: 'get',
+                        url: '<%=config.siteUrl%>apis/delete/'+$(this).data('id'),
+                        success: function(results){
+                            if(results.retcode == 0){
+                                alert('<%=t("tips.deleteSuccess")%>');
+                                location.href = '<%=config.siteUrl%>';
+                            }else{
+                                alert(results.retmsg || '<%=t("tips.deleteFailed")%>');
+                            }
+                        },
+                        error: function(err){
+                            console.log(err);
+                            alert(err);
+                        }
+                    });
+                    return false;
+                });
+                $('.js-tooltip').tooltip();
+            })();
+        </script>
+<% include inc/footer.html %>

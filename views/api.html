@@ -1,0 +1,381 @@
+<% include inc/header.html %>
+
+<div class="container">
+    <div class="well">
+    <form class="form-horizontal" role="form" method="post" id="add-api-form">
+        <div class="form-group">
+            <label for="api-project" class="control-label col-md-2"><%=t("api.project")%>：</label>
+            <div class="col-md-2">
+                <select class="form-control" id="api-project">
+                    <%
+                    for(var p in config.projects){
+                    %>
+                    <option value="<%=p%>" <%if(p == apiInfo.project){%>selected<%}%>><%=config.projects[p]%></option>
+                    <%
+                    }
+                    %>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="api-developer" class="control-label col-md-2"><%=t("api.developer")%>：</label>
+            <div class="col-md-4">
+                <input type="text" class="form-control" id="api-developer" value="<%=apiInfo.developer%>" required>
+                <span class="help-block"><%-t("help.developer")%></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="api-name" class="control-label col-md-2"><%=t("api.name")%>：</label>
+            <div class="col-md-4">
+                <input type="text" class="form-control" id="api-name" value="<%=apiInfo.name%>" required>
+                <span class="help-block"><%-t("help.name")%></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="api-purpose" class="control-label col-md-2"><%=t("api.purpose")%>：</label>
+            <div class="col-md-4">
+                <input type="text" class="form-control" id="api-purpose" value="<%=apiInfo.purpose%>" required>
+                <span class="help-block"><%-t("help.purpose")%></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="api-desc" class="control-label col-md-2"><%=t("api.desc")%>：</label>
+            <div class="col-md-6">
+                <textarea class="form-control" id="api-desc" required><%=apiInfo.desc%></textarea>
+                <span class="help-block"><%-t("help.desc")%></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="api-host" class="control-label col-md-2"><%=t("api.url")%>：</label>
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon"><%=t("api.host")%></span>
+                    <input type="text" class="form-control" name="api-host" id="api-host" value="<%=apiInfo.host%>" required>
+                    <span class="input-group-addon"><%=t("api.path")%></span>
+                    <input type="text" class="form-control" name="api-path" id="api-path" value="<%=apiInfo.path%>">
+                    <span class="input-group-addon"><%=t("api.urlAddon")%></span>
+                    <input type="text" class="form-control" name="api-url-addon"  id="api-url-addon" value="<%=apiInfo.urlAddon%>">
+                </div>
+                <span class="help-block"><%-t("help.url")%></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2"><%=t("api.type")%>：</label>
+            <div class="col-md-4">
+                <label class="checkbox-inline"><input type="checkbox" name="api-type" value="jsonp" <%if(apiInfo.type.indexOf('jsonp')>-1){%>checked<%}%>>jsonp</label>
+                <label class="checkbox-inline"><input type="checkbox" name="api-type" value="json" <%if(apiInfo.type.indexOf('json')>-1){%>checked<%}%>>json</label>
+                <!--
+                <label class="checkbox-inline"><input type="checkbox" name="api-type" value="text" <%if(apiInfo.type.indexOf('text')>-1){%>checked<%}%>>text</label>
+                -->
+                <span class="help-block"><%-t("help.type")%></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2"><%=t("api.httpType")%>：</label>
+            <div class="col-md-2">
+                <label class="checkbox-inline"><input type="checkbox" name="api-http-type" value="get" <%if(apiInfo.httpType.indexOf('get')>-1){%>checked<%}%>>get</label>
+                <label class="checkbox-inline"><input type="checkbox" name="api-http-type" value="post" <%if(apiInfo.httpType.indexOf('post')>-1){%>checked<%}%>>post</label>
+                <span class="help-block"><%-t("help.httpType")%></span>
+            </div>
+        </div>
+        <hr/>
+        <div class="form-group">
+            <label class="control-label col-md-2"><%=t("api.params")%>：</label>
+            <div class="col-md-8" id="params-wrapper">
+                <div class="input-group" data-role="param-row">
+                    <span class="input-group-addon"><%=t("api.paramName")%></span>
+                    <input type="text" class="form-control" value="" name="param-name" required>
+                    <span class="input-group-addon"><%=t("api.paramDesc")%></span>
+                    <input type="text" class="form-control"  value="" name="param-desc" required>
+                    <span class="input-group-addon glyphicon glyphicon-minus cursor-pointer" data-action="remove" title="<%=t('clickToRemove')%>"></span>
+                </div>
+                <div class="btn-group margin-top-20">
+                    <button type="button" class="btn btn-default" id="api-add-param" title="<%=t('clickToAdd')%>"><span class="glyphicon glyphicon-plus"></span></button>
+                </div>
+                <span class="help-block"><%-t("help.params")%></span>
+            </div>
+        </div>
+        <hr/>
+        <div class="form-group">
+            <label class="control-label col-md-2"><%=t("api.results")%>：</label>
+            <div class="col-md-8" id="results-wrapper">
+                <div class="input-group" data-role="result-row">
+                    <span class="input-group-addon"><%=t("api.resultName")%></span>
+                    <input type="text" class="form-control" value="" name="result-name" required>
+                    <span class="input-group-addon"><%=t("api.resultType")%></span>
+                    <select class="form-control" name="result-type">
+                        <option value="String"><%=t("types.string")%></option>
+                        <option value="Number"><%=t("types.number")%></option>
+                        <option value="Array"><%=t("types.array")%></option>
+                        <option value="Boolean"><%=t("types.boolean")%></option>
+                        <option value="Object"><%=t("types.object")%></option>
+                    </select>
+                    <span class="input-group-addon"><%=t("api.resultDesc")%></span>
+                    <input type="text" class="form-control"  value="" name="result-desc" required>
+                    <span class="input-group-addon glyphicon glyphicon-minus cursor-pointer" data-action="remove" title="<%=t("clickToRemove")%>"></span>
+                </div>
+                <div class="btn-group margin-top-20">
+                    <button type="button" class="btn btn-default" id="api-add-result" title="<%=t("clickToAdd")%>"><span class="glyphicon glyphicon-plus"></span></button>
+                </div>
+                <span class="help-block"><%-t("help.results")%></span>
+            </div>
+        </div>
+        <hr/>
+        <div class="form-group">
+            <label class="control-label col-md-2"><%=t("api.demo")%>：</label>
+            <div class="col-md-8">
+                <span class="help-block"><%-t("help.demo")%></span>
+            </div>
+        </div>
+        <div class="editor-wrapper clearfix">
+            <div class="editor-tools">
+                <button type="button" class="btn btn-info btn-sm" title="<%=t('tips.moveLeftToRight')%>" data-action="to-right"><span class="glyphicon glyphicon-chevron-right"></span></button>
+                <br/><br/>
+                <button type="button" class="btn btn-info btn-sm" title="<%=t('tips.moveRightToLeft')%>" data-action="to-left"><span class="glyphicon glyphicon-chevron-left"></span></button>
+            </div>
+            <div id="jsoneditor-code" class="col-md-6">
+
+            </div>
+            <div id="jsoneditor-tree" class="col-md-6">
+
+            </div>
+        </div>
+        <hr/>
+        <div class="form-group">
+            <label class="control-label col-md-2"><%=t("api.other")%>：</label>
+            <div class="col-md-6">
+                <label class="checkbox"><input type="checkbox" id="api-is-simulate" value="get" <%if(apiInfo.isSimulate){%>checked<%}%>><%=t("api.isSimulate")%></label>
+                <span class="help-block"><%=t('help.isSimulate')%></span>
+                <label class="checkbox"><input type="checkbox" id="api-is-proxy" value="post" <%if(apiInfo.isProxy){%>checked<%}%>><%=t("api.isProxy")%></label>
+                <span class="help-block"><%=t('help.isProxy')%></span>
+            </div>
+        </div>
+        <hr/>
+        <div class="form-group">
+                <button type="submit" class="btn btn-primary center-block" id="add-api-submit"><%=t("submit")%></button>
+        </div>
+    </form>
+    </div>
+</div> <!-- /container -->
+
+<script src="<%=config.staticUrl%>assets/js/brand/jsoneditor-min.js"></script>
+<script src="<%=config.staticUrl%>assets/js/brand/ace-min.js"></script>
+<script src="<%=config.staticUrl%>assets/js/common.js"></script>
+
+<script type="text/javascript" >
+
+    ;(function(){
+        var params = [],
+                results = [],
+                $paramsWrapper = $('#params-wrapper'),
+                $resultsWrapper = $('#results-wrapper');
+        try {
+            params = JSON.parse('<%-JSON.stringify(apiInfo.params)%>');
+        }catch (e){
+            params = [];
+        }
+        $.each(params, function(i,v){
+            if(i != 0){
+                addParamRow();
+            }
+            $paramsWrapper.find('[name="param-name"]').eq(i).val(v.name);
+            $paramsWrapper.find('[name="param-desc"]').eq(i).val(v.desc);
+        });
+        try {
+            results = JSON.parse('<%-JSON.stringify(apiInfo.results)%>');
+        }catch (e){
+            results = [];
+        }
+        $.each(results, function(i,v){
+            if(i != 0){
+                addResultRow();
+            }
+            $resultsWrapper.find('[name="result-name"]').eq(i).val(v.name);
+            $resultsWrapper.find('[name="result-type"]').eq(i).val(v.type);
+            $resultsWrapper.find('[name="result-desc"]').eq(i).val(v.desc);
+        });
+        var treeeditor = new jsoneditor.JSONEditor($('#jsoneditor-tree')[0]);
+        var codeeditor = new jsoneditor.JSONEditor($('#jsoneditor-code')[0], {mode:'code'});
+        var defaultDemo = {
+            "retcode": 0,
+            "retmsg": "success",
+            "data": [1]
+        };
+        var demo = null;
+        try {
+            demo = JSON.parse('<%-JSON.stringify(apiInfo.demo)%>');
+        }catch (e){
+            demo = defaultDemo;
+        }
+        treeeditor.set(demo);
+        codeeditor.set(demo);
+
+        $('.editor-tools').on('click','[data-action]',function(){
+            var action = $(this).data('action');
+            try{
+                if(action == 'to-right'){
+                    treeeditor.set(codeeditor.get());
+                }else if (action == 'to-left'){
+                    codeeditor.set(treeeditor.get());
+                }
+            }catch (e){
+                alert('<%=t("tips.jsonFormatErr")%>：'+ e.message);
+            }
+        });
+
+        function addParamRow(){
+            var addParamTpl = '<div class="input-group margin-top-20" data-role="param-row">'
+                    +'<span class="input-group-addon"><%=t("api.paramName")%></span>'
+                    +'<input type="text" class="form-control" value="" name="param-name" required>'
+                    +'<span class="input-group-addon"><%=t("api.paramDesc")%></span>'
+                    +'<input type="text" class="form-control"  value="" name="param-desc" required>'
+                    +'<span class="input-group-addon glyphicon glyphicon-minus cursor-pointer" data-action="remove"  title="<%=t("clickToRemove")%>"></span>'
+                    +'</div>';
+            $('#api-add-param').parent().before(addParamTpl);
+        }
+
+        function addResultRow(){
+            var addResultTpl = '<div class="input-group margin-top-20" data-role="result-row">'
+                    +'<span class="input-group-addon"><%=t("api.resultName")%></span>'
+                    +'<input type="text" class="form-control" value="" name="result-name" required>'
+                    +'<span class="input-group-addon"><%=t("api.resultType")%></span>'
+                    +'<select class="form-control" name="result-type" required>'
+                    +'<option value="String"><%=t("types.string")%></option>'
+                    +'<option value="Number"><%=t("types.number")%></option>'
+                    +'<option value="Array"><%=t("types.array")%></option>'
+                    +'<option value="Boolean"><%=t("types.boolean")%></option>'
+                    +'<option value="Object"><%=t("types.object")%></option>'
+                    +'</select>'
+                    +'<span class="input-group-addon"><%=t("api.resultDesc")%></span>'
+                    +'<input type="text" class="form-control"  value="" name="result-desc" required>'
+                    +'<span class="input-group-addon glyphicon glyphicon-minus cursor-pointer" data-action="remove"  title="<%=t("clickToRemove")%>"></span>'
+                    +'</div>';
+            $('#api-add-result').parent().before(addResultTpl);
+        }
+
+        $('#add-api-form').on('click','#api-add-param,#api-add-result,[data-action="remove"]', function(){
+            var $this = $(this);
+                if (this.id == 'api-add-param') {
+                    addParamRow();
+                }else if (this.id == 'api-add-result') {
+                    addResultRow();
+                } else {
+                    $this.parent().remove();
+                }
+        });
+
+        $('#add-api-form').on('submit', function(e){
+            var params = {},
+                    project = $('#api-project').val(),
+                    developer = $('#api-developer').val(),
+                    name = $('#api-name').val(),
+                    purpose = $('#api-purpose').val(),
+                    desc = $('#api-desc').val(),
+                    host = $('#api-host').val(),
+                    path = $('#api-path').val(),
+                    urlAddon = $('#api-url-addon').val(),
+                    $type = $('[name="api-type"]'),
+                    $httpType = $('[name="api-http-type"]'),
+                    isSimulate = $('#api-is-simulate').is(':checked'),
+                    isProxy = $('#api-is-proxy').is(':checked');
+            params.project = project;
+            params.developer = developer;
+            params.name = name;
+            params.purpose = purpose;
+            params.desc = desc;
+            params.host = host;
+            params.path = path;
+            params.urlAddon = urlAddon;
+            params.type = getCheckboxVal($type);
+            params.httpType = getCheckboxVal($httpType);
+            params.isSimulate = isSimulate;
+            params.isProxy = isProxy;
+
+            var check = true;
+
+            var defaultParams = [];
+            $paramsWrapper.find('[data-role="param-row"]').each(function(i,v){
+                var $this = $(this),
+                        name = $this.find('[name="param-name"]').val(),
+                        desc = $this.find('[name="param-desc"]').val();
+                if(name && desc){
+                    defaultParams.push({
+                        name: name,
+                        desc: desc
+                    });
+                }else{
+                    alert('<%=t("tips.requireParamField")%>');
+                    check = false;
+                }
+            });
+            params.params = defaultParams;
+
+            var defaultResults = [];
+            $resultsWrapper.find('[data-role="result-row"]').each(function(i,v){
+                var $this = $(this),
+                        name = $this.find('[name="result-name"]').val(),
+                        type = $this.find('[name="result-type"]').val(),
+                        desc = $this.find('[name="result-desc"]').val();
+                if(name && type && desc){
+                    defaultResults.push({
+                        name: name,
+                        type: type,
+                        desc: desc
+                    });
+                }else{
+                    alert('<%=t("tips.requireResultField")%>');
+                    check = false;
+                }
+            });
+            params.results = defaultResults;
+            try{
+                params.demo = codeeditor.get();
+            }catch (e){
+                alert('<%=t("tips.demoFormatErr")%>：'+ e.message);
+                check = false;
+            }
+            if(!check){
+                return false;
+            }
+            var ajaxUrl = '<%=config.siteUrl%>apis/add';
+            <%
+            if(locals.apiInfo && apiInfo._id){
+            %>
+                ajaxUrl = '<%=config.siteUrl%>apis/edit/<%=apiInfo._id%>';
+                params._id = '<%=apiInfo._id%>';
+            <%}%>
+            console.log(params);
+            $.ajax({
+                type: 'post',
+                url: ajaxUrl,
+                data: {data: JSON.stringify(params)},
+                success: function(results){
+                    if(results.retcode == 0){
+                        alert(results.retmsg || '<%=t("tips.operationSuccess")%>');
+                        location.href = '<%=config.siteUrl%>';
+                    }else{
+                        alert(results.retmsg || '<%=t("tips.operationFailed")%>');
+                    }
+                },
+                error: function(err){
+                    alert(err);
+                }
+            });
+            e.preventDefault();
+            return false;
+        });
+
+        function getCheckboxVal($box){
+            var results= [];
+            $box.each(function(i,v){
+                if(this.checked){
+                    results.push(this.value);
+                }
+            });
+            return results;
+        }
+    })();
+
+
+</script>
+<% include inc/footer.html %>

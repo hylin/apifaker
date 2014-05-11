@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title><%=t("siteTitle")%> - </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="hylin.org">
+
+    <link href="<%=config.staticUrl%>assets/css/brand/bootstrap.min.css" rel="stylesheet">
+    <link href="<%=config.staticUrl%>assets/css/brand/jsoneditor-min.css" rel="stylesheet">
+    <link href="<%=config.staticUrl%>assets/css/global.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+    <script src="<%=config.staticUrl%>assets/js/brand/html5shiv.min.js"></script>
+    <script src="<%=config.staticUrl%>assets/js/brand/respond.min.js"></script>
+    <![endif]-->
+    <script src="<%=config.staticUrl%>assets/js/brand/jquery-1.10.2.min.js"></script>
+    <script src="<%=config.staticUrl%>assets/js/brand/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+<div class="container">
+    <header class="navbar navbar-default margin-top-20">
+        <a class="navbar-brand" href="#"><%=t("siteName")%></a>
+        <ul id="top-navbar" class="nav navbar-nav">
+            <li class="<%=activeMenu('/')%>"><a href="<%=config.siteUrl%>"><%=t("menus.list")%></a></li>
+            <li class="<%=activeMenu('/apis/add')%>"><a href="<%=config.siteUrl%>apis/add"><%=t("menus.add")%></a></li>
+        </ul>
+        <form class="navbar-form pull-right" role="search" action="<%=config.siteUrl%>" method="get">
+            <div class="form-group">
+                <input type="text" class="form-control" name="keyword" value="<%=locals.keyword || ''%>" placeholder="<%=t("searchApi")%>">
+                <input type="hidden" name="project" value="<%=locals.project || ''%>">
+            </div>
+            <button type="submit" class="btn btn-default"><%=t("search")%></button>
+        </form>
+    </header><!--/.navbar -->
+</div>

@@ -1,0 +1,24 @@
+{
+  "name": "apifaker",
+  "author": "hylin <admin@hylin.org>",
+  "homepage": "http://apifaker.com/",
+  "version": "0.0.1",
+  "description": "A useful tool for front-end engineer to fake a api",
+  "main": "apifaker.js",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hylin/apifaker"
+  },
+  "license": "Apache License 2.0",
+  "dependencies": {
+    "express": "4.1.1",
+    "ejs": "1.0.0",
+    "async": "0.8.0",
+    "nedb": "0.10.5",
+    "body-parser": "1.1.0",
+    "serve-favicon": "2.0.0",
+    "request": "2.34.0",
+    "i18next": "1.7.4"
+  }
+}

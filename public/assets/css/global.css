@@ -1,0 +1,73 @@
+﻿/* base styles */
+body {
+    /*
+    -webkit-animation: slideDown .5s;
+    animation: slideDown .5s;
+    */
+}
+a, a:focus, a:visited{
+    outline: 0;
+}
+
+@-webkit-keyframes fadeIn {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+@keyframes fadeIn {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+@-webkit-keyframes slideDown{
+    0%{opacity:0;-webkit-transform:-webkit-translateY(-50px);}
+    100%{opacity:1;-webkit-transform:-webkit-translateY(0);}
+}
+@keyframes slideDown{
+    0%{opacity:0;transform:translateY(-50px);}
+    100%{opacity:1;transform:translateY(0);}
+}
+@-webkit-keyframes bounceIn{
+    0%{opacity:0;-webkit-transform:scale(.5)}
+    100%{opacity:1;-webkit-transform:scale(1)}
+}
+@keyframes bounceIn{
+    0%{opacity:0;transform:scale(.5)}
+    100%{opacity:1;transform:scale(1)}
+}
+.margin-top-20 {
+    margin-top: 20px !important;
+}
+.margin-right-20 {
+    margin-right: 20px !important;
+}
+.cursor-pointer{
+    cursor: pointer !important;
+}
+#top-navbar li a{
+    font-weight: bold;
+}
+.editor-wrapper{
+    position: relative;
+}
+.editor-wrapper .editor-tools{
+    position: absolute;
+    left: 50%;
+    top: 100px;
+    margin-left: -17px;
+    z-index: 999;
+}
+#jsoneditor-code{
+    height: 400px;
+}
+.jsoneditor div.tree{
+    background-color: #fff;
+}
+
+.simulator-item{
+    position: relative;
+}
+.simulator-item .label{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
