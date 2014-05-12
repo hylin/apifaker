@@ -19,15 +19,15 @@
  * Copyright (c) 2014 ApiFaker, http://apifaker.com/
  *
  * @author  hylin, <admin@hylin.org>
- * @version 0.0.1
- * @date    2014-05-11
+ * @version 0.0.2
+ * @date    2014-05-12
  */
 
 /**
  * Module dependencies.
  */
 var router = require('express').Router(),
-  config = require('../config'),
+  models = require('../lib/models'),
   async = require('async'),
   db = require('../lib/database');
 
@@ -91,7 +91,7 @@ router.route('/simulator/add/:apiId')
       }
       res.render('simulator', {
         apiInfo: results.getApiInfo,
-        simulator: config.simulatorModel,//add form page don't have actual simulator
+        simulator: models.simulatorModel,//add form page don't have actual simulator
         apiId: apiId,
         simulatorId: ''
       });

@@ -19,8 +19,8 @@
  * Copyright (c) 2014 ApiFaker, http://apifaker.com/
  *
  * @author  hylin, <admin@hylin.org>
- * @version 0.0.1
- * @date    2014-05-11
+ * @version 0.0.2
+ * @date    2014-05-12
  */
 
 /**
@@ -30,33 +30,29 @@ var router = require('express').Router(),
   config = require('../config'),
   async = require('async'),
   request = require('request'),
+  util = require('util'),
+  utils = require('../lib/utils'),
   db = require('../lib/database');
 
 /**
  * After all,here is simulator's handler
  *
  * TODO:
- * 1.we didn't handle post data now,should be care in next version.
- * 2.ugly implement,need refactoring.:(
+ * 1.ugly implement,need refactoring.:(
  */
 router.route('*')
   .all(function (req, res, next) {
     var protocol = req.protocol,
       host = protocol+ '://' +req.host,
       path = req.path,
+      uri = req.protocol+'://'+req.host+req.originalUrl,
       query = req.query,
-      body = req.body,//post data should be handle.we'll care it in next version.
-      queryArr = req.originalUrl.split('?');
-    if(queryArr.length >= 2){
-      queryArr = queryArr[1].split('&');
-    }
-    for(var i= 0,len=query.length;i<len;i++){
-      //callback should be settable in next version
-      if(queryArr[i].startWith('callback')){
-        queryArr = queryArr.splice(i,1);
-        break;
-      }
-    }
+      body = req.body,//handle post data
+      params = {};
+    utils.extends(params, query);
+    utils.extends(params, body);
+    delete params[config.jsonpName];//delete callback function param
+
     async.auto({
       //first,we look up api by host and path.
       getByHostAndPath: function(callback){
@@ -68,8 +64,8 @@ router.route('*')
           callback(null, docs);
         });
       },
-      //then,we match query data
-      getByQuery: ['getByHostAndPath', function(callback, results){
+      //then,we match query/body data
+      getByParams: ['getByHostAndPath', function(callback, results){
         var docs = results.getByHostAndPath,
           matched = null;
         if(!docs || docs.length == 0){
@@ -81,34 +77,28 @@ router.route('*')
             return;
           }
 
-          var addons = v.urlAddon,
+          var addons = utils.paramsToJson(v.urlAddon),
             counter = 0;
-          //if this api don't have addon,we convert to empty array and to match it.
-          if(!addons){
-            addons = [];
-          }else{
-            addons = addons.split('&');
-          }
-          addons.forEach(function(r){
-            var item = r.split('=');
-            for(var p in query){
+          for(var name in addons){
+            for(var p in params){
               //only match it when name and value are equals
-              if(query.hasOwnProperty(p) && p == item[0] && query[p] == item[1]){
+              if(params.hasOwnProperty(p) && p == name && query[p] == addons[name]){
                 counter++;
               }
             }
-          });
+          }
           //matched or failed
-          if(counter == addons.length){
+          if(counter == Object.keys(addons).length){
             matched = v;
             return;
           }
         });
         callback(null, matched);
       }],
-      getSimulators: ['getByQuery', function(callback, results){
-        var doc = results.getByQuery;
+      getSimulators: ['getByParams', function(callback, results){
+        var doc = results.getByParams;
         if(!doc || !doc.isSimulate){
+          console.log('Stop Simulate. Url: '+uri+'.form-data: '+ util.inspect(req.body));
           callback(null,null);
           return;
         }
@@ -123,18 +113,7 @@ router.route('*')
       }],
       matchSimulator: ['getSimulators', function(callback, results){
         var simulators = results.getSimulators,
-          matched = null,
-          // check if params has matched name and value
-          hasParam = function(params, name, value){
-            var flag = false;
-            params.forEach(function(v){
-              if(v.name == name && v.value == value){
-                flag = true;
-                return;
-              }
-            });
-            return flag;
-          };
+          matched = null;
         if(!simulators || simulators.length == 0){
           callback(null, null);
           return;
@@ -144,12 +123,11 @@ router.route('*')
           var simParams = v.simParams,
             flag = false,
             counter = 0;
-          queryArr.forEach(function(vv){
-            var item = vv.split('=');
-            if(hasParam(simParams, item[0], item[1])){
+          for(var name in params){
+            if(isMatchParam(simParams, name, params[name])){
               counter++;
             }
-          });
+          }
           //if number of matched query params is equals simulator's setting number,we hit.
           if(counter == simParams.length){
             matched = v;
@@ -164,25 +142,26 @@ router.route('*')
         res.render('message',{msg: req.t('tips.errorOccurred')+": "+err.toString()});
         return;
       }
-      var matchedApi = results.getByQuery;
+      var matchedApi = results.getByParams;
       if(!results.matchSimulator){
         //simulator match failed,in next step,we'll play as a proxy server role.
         //if we matched a api and api's isProxy is false, we don't proxy query to actual server
         if(config.proxy && (!matchedApi || matchedApi.isProxy)) {
-          var r = null,
-            //uri = 'http://hylin.org/';
-            uri = req.protocol+'://'+req.host+req.originalUrl;
+          var r = null;
           if (req.method === 'POST') {
             r = request.post({uri: uri, form: req.body});
           } else {
             r = request(uri);
           }
+          console.log('In Proxy.Url: '+ uri +'; form-data: '+util.inspect(req.body));
           req.pipe(r).pipe(res);
         }else{
+          console.log('Stop Proxy.Url: '+ uri +'; form-data: '+util.inspect(req.body));
           res.jsonp(null);
         }
       }else {
         processReturnHolder(results.matchSimulator.simResults, query);
+        console.log('Simulator Matched. Url: '+ uri +'; form-data: '+util.inspect(req.body));
         res.jsonp(results.matchSimulator.simResults);
       }
     });
@@ -212,6 +191,24 @@ function processReturnHolder(results, query){
       }
     }
   }
+}
+
+/**
+ * check if params has matched name and value
+ * @param params
+ * @param name
+ * @param value
+ * @returns {boolean}
+ */
+function isMatchParam(params, name, value){
+  var flag = false;
+  params.forEach(function(v){
+    if(v.name == name && v.value == value){
+      flag = true;
+      return;
+    }
+  });
+  return flag;
 }
 
 module.exports = router;

@@ -19,8 +19,8 @@
  * Copyright (c) 2014 ApiFaker, http://apifaker.com/
  *
  * @author  hylin, <admin@hylin.org>
- * @version 0.0.1
- * @date    2014-05-11
+ * @version 0.0.2
+ * @date    2014-05-12
  */
 var config = {
   //server's run port
@@ -31,23 +31,19 @@ var config = {
     "p2": "Project2",
     "p3": "Project3"
   },
-  staticUrl: "http://apifaker.com/",
-  siteUrl: "http://apifaker.com/",
+  staticUrl: "http://localhost/",
+  siteUrl: "http://localhost/",
   //use to auto return query's value
   returnPlaceholder: "$return$",
+  //override the callback function name in a jsonp request
+  jsonpName: "callback",
   //if we don't match any query,should we play as proxy server?
   //set true to enable,false to disable.
   //notice: you shouldn't enable this feature
   // when the domain of this query is actually host on this server
   proxy: true,
 
-  enableEdit: true,
-
-  //api info model
-  apiInfoModel: {"project":"","developer":"","name":"","purpose":"","desc":"","host":"","path":"","urlAddon":"","type":["json","jsonp"],"httpType":["get","post"],"params":[{"name":"","desc":""}],"results":[{"name":"","type":"String","desc":""}],"demo":{"retcode":0,"retmsg":"success","data":[]},"isSimulate":true,"isProxy": true},
-
-  // simulator model
-  simulatorModel: {"apiId":"","mark":"","simParams":"","simResults":""}
+  enableEdit: true
 };
 
 module.exports = config;

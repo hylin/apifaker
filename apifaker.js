@@ -19,8 +19,8 @@
  * Copyright (c) 2014 ApiFaker, http://apifaker.com/
  *
  * @author  hylin, <admin@hylin.org>
- * @version 0.0.1
- * @date    2014-05-11
+ * @version 0.0.2
+ * @date    2014-05-12
  */
 
 /**

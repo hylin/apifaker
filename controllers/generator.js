@@ -19,15 +19,15 @@
  * Copyright (c) 2014 ApiFaker, http://apifaker.com/
  *
  * @author  hylin, <admin@hylin.org>
- * @version 0.0.1
- * @date    2014-05-11
+ * @version 0.0.2
+ * @date    2014-05-12
  */
 
 /**
  * Module dependencies.
  */
 var router = require('express').Router(),
-  config = require('../config'),
+  models = require('../lib/models'),
   async = require('async'),
   db = require('../lib/database');
 
@@ -60,7 +60,7 @@ router.get('/', function (req, res) {
 router.route('/apis/add')
   .get(function (req, res) {
     //fill with empty ApiInfo object
-    res.render('api', {apiInfo: config.apiInfoModel});
+    res.render('api', {apiInfo: models.apiInfoModel});
   })
   .post(function (req, res) {
     //all data is in data field
