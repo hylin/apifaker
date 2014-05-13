@@ -73,10 +73,14 @@
                 simParams = [],
                 $paramsWrapper = $('#params-wrapper');
         try {
-            params = JSON.parse('<%-JSON.stringify(apiInfo.params)%>');
-            simParams = JSON.parse('<%-JSON.stringify(simulator.simParams)%>');
+            params = <%-JSON.stringify(apiInfo.params)%>;
         }catch (e){
             params = [];
+        }
+        try {
+            simParams = <%-JSON.stringify(simulator.simParams)%>;
+        }catch (e){
+            simParams = [];
         }
         $.each(params, function(i,v){
             addParamRow();

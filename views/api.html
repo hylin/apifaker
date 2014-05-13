@@ -170,7 +170,7 @@
                 $paramsWrapper = $('#params-wrapper'),
                 $resultsWrapper = $('#results-wrapper');
         try {
-            params = JSON.parse('<%-JSON.stringify(apiInfo.params)%>');
+            params = <%-JSON.stringify(apiInfo.params)%>;
         }catch (e){
             params = [];
         }
@@ -182,7 +182,7 @@
             $paramsWrapper.find('[name="param-desc"]').eq(i).val(v.desc);
         });
         try {
-            results = JSON.parse('<%-JSON.stringify(apiInfo.results)%>');
+            results = <%-JSON.stringify(apiInfo.results)%>;
         }catch (e){
             results = [];
         }
