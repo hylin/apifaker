@@ -1,36 +1,37 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Api Faker by hylin</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
 
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+
+    <title>Api Faker by hylin</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
+    <header>
+      <div class="inner">
         <h1>Api Faker</h1>
-        <p>a useful tool for front-end engineer to simulate api</p>
-        <p class="view"><a href="https://github.com/hylin/apifaker">View the Project on GitHub <small>hylin/apifaker</small></a></p>
-        <ul>
-          <li><a href="https://github.com/hylin/apifaker/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/hylin/apifaker/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/hylin/apifaker">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h1>
+        <h2>a useful tool for front-end engineer to simulate api</h2>
+        <a href="https://github.com/hylin/apifaker" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
 <a name="api-faker" class="anchor" href="#api-faker"><span class="octicon octicon-link"></span></a>Api Faker</h1>
 
-<p><a href="http://apifaker.com/">http://apifaker.com/</a></p>
+<p>这里可以查看示例：<a href="http://demo.apifaker.com/">http://demo.apifaker.com/</a></p>
 
 <h3>
 <a name="%E7%AE%80%E4%BB%8B" class="anchor" href="#%E7%AE%80%E4%BB%8B"><span class="octicon octicon-link"></span></a>简介</h3>
@@ -39,39 +40,53 @@
 
 <p>同时你也可以把它当作一个简易的api文档管理工具。</p>
 
-<p>支持浏览器: Chrome, Firefox, Safari, Opera, Internet Explorer 9+.</p>
+<p>Api管理平台支持浏览器: Chrome, Firefox, Safari, Opera, Internet Explorer 9+.</p>
 
 <h3>
 <a name="%E5%AE%89%E8%A3%85" class="anchor" href="#%E5%AE%89%E8%A3%85"><span class="octicon octicon-link"></span></a>安装</h3>
 
-<p>Api Faker运行在Nodejs环境下，请确保你电脑上已经安装好Nodejs。</p>
+<p>Api Faker运行在Nodejs环境下，请确保系统中已经安装好Nodejs。</p>
 
 <p>从下面地址下载最新的文件
 <a href="https://github.com/hylin/apifaker/archive/master.zip">https://github.com/hylin/apifaker/archive/master.zip</a>
-解压到任意目录，命令行中cd到该解压目录</p>
+解压到任意目录，命令行中cd到该解压目录，安装依赖组件，根据实际情况修改config.js配置，然后启动即可。</p>
 
 <pre><code>npm install
 // modify the config file as yours
 node apifaker.js
 </code></pre>
 
-<p>安装依赖组件，然后启动即可。</p>
-
 <h3>
 <a name="%E7%89%B9%E6%80%A7" class="anchor" href="#%E7%89%B9%E6%80%A7"><span class="octicon octicon-link"></span></a>特性</h3>
 
 <ul>
-<li>Api基本信息管理</li>
+<li>Api文档信息管理</li>
 <li>支持同一接口根据不同参数，返回不同模拟数据</li>
 <li>支持自动代理，即如果没有匹配的请求的模拟数据，自动转发到实际服务器</li>
 </ul><h3>
 <a name="%E8%AF%B4%E6%98%8E" class="anchor" href="#%E8%AF%B4%E6%98%8E"><span class="octicon octicon-link"></span></a>说明</h3>
 
-<p>1.将你希望模拟的api的域名host到工具部署所在机器，到工具页面添加对应api信息，然后浏览器中访问api即可看到返回模拟的数据</p>
+<h4>
+<a name="api%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86" class="anchor" href="#api%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86"><span class="octicon octicon-link"></span></a>Api信息管理</h4>
 
-<p>2.要使用自动代理功能，务必将本工具部署到其它机器，并且不能对请求的域名进行host。</p>
+<ol>
+<li><p>访问http://工具所在服务器地址/，即可开始管理Api</p></li>
+<li><p>添加接口和添加模拟数据记录页各个字段都有详细的说明，请参考各个字段说明</p></li>
+</ol><h4>
+<a name="api%E6%A8%A1%E6%8B%9F" class="anchor" href="#api%E6%A8%A1%E6%8B%9F"><span class="octicon octicon-link"></span></a>Api模拟</h4>
 
-<p>比如，你要在机器A(192.168.1.2)上测试<a href="http://api.example.com/v1/get_user_info%E6%8E%A5%E5%8F%A3%E3%80%82">http://api.example.com/v1/get_user_info接口。</a></p>
+<ol>
+<li>将你希望模拟的api的域名host到工具部署所在机器，到工具页面添加对应api信息，然后浏览器中访问api即可看到返回模拟的数据。</li>
+</ol><p>例如，工具自带两个qq地图的webservice接口示例。你只需要在你本机做以下host</p>
+
+<pre><code>192.210.195.6 apis.map.qq.com
+</code></pre>
+
+<p>然后再用浏览器访问 <a href="http://apis.map.qq.com/ws/coord/v1/translate?locations=39.12,116.83;30.21,115.43&amp;type=3&amp;callback=test&amp;key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77">http://apis.map.qq.com/ws/coord/v1/translate?locations=39.12,116.83;30.21,115.43&amp;type=3&amp;callback=test&amp;key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77</a> 即可看到接口返回值，是Api Faker模拟返回的。</p>
+
+<ol>
+<li>要使用自动代理功能，务必将本工具部署到其它机器，并且不能对请求的域名进行host。</li>
+</ol><p>比如，你要在机器A(192.168.1.2)上测试<a href="http://api.example.com/v1/get_user_info">http://api.example.com/v1/get_user_info</a> 接口。</p>
 
 <p>首先你在机器B(192.168.1.3)上部署这个工具，并确认机器B上没有对api.example.com域名进行host。</p>
 
@@ -83,17 +98,33 @@ node apifaker.js
 <p>。
 这样在机器A上访问<a href="http://api.example.com/v1/get_user_info">http://api.example.com/v1/get_user_info</a> 时，如果没有匹配上设置的模拟数据条件，则该工具会自动从机器B发起一个相同的请求访问<a href="http://api.example.com/v1/get_user_info">http://api.example.com/v1/get_user_info</a> ，由于机器B上没有host，所以会去访问实际的api.example.com域名下的接口</p>
 
+<p>还是demo.apifaker.com上的示例，host不变，你访问 <a href="http://apis.map.qq.com/ws/geocoder/v1?location=39.984154,116.307490&amp;key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&amp;callback=test">http://apis.map.qq.com/ws/geocoder/v1?location=39.984154,116.307490&amp;key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&amp;callback=test</a> ，虽然apis.map.qq.com被host到了192.210.195.6，但是还是返回了正确结果，因为该接口目前停止了模拟，并开启了代理模式。</p>
+
 <h3>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h3>
 
 <p>Apache License 2.0</p>
-      </section>
+
+<p>© 2014 <a href="http://www.apifaker.com/">http://www.apifaker.com/</a></p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/hylin/apifaker/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/hylin/apifaker/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/hylin/apifaker"></a> is maintained by <a href="https://github.com/hylin">hylin</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
     </div>
-    <footer>
-      <p>Project maintained by <a href="https://github.com/hylin">hylin</a></p>
-      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    
+
+  
   </body>
 </html>
