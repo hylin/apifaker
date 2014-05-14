@@ -27,12 +27,20 @@
  * Module dependencies.
  */
 var router = require('express').Router(),
+  path = require('path'),
   config = require('../config'),
   async = require('async'),
   request = require('request'),
   util = require('util'),
   utils = require('../lib/utils'),
   db = require('../lib/database');
+/**
+ * for robots
+ */
+router.route('/robots.txt')
+  .all(function (req, res) {
+  res.sendfile(path.join(__dirname, '../robots.txt'));
+});
 
 /**
  * After all,here is simulator's handler
@@ -146,15 +154,21 @@ router.route('*')
       if(!results.matchSimulator){
         //simulator match failed,in next step,we'll play as a proxy server role.
         //if we matched a api and api's isProxy is false, we don't proxy query to actual server
-        if(config.proxy && (!matchedApi || matchedApi.isProxy)) {
-          var r = null;
-          if (req.method === 'POST') {
-            r = request.post({uri: uri, form: req.body});
-          } else {
-            r = request(uri);
-          }
+        if(config.proxy && matchedApi && matchedApi.isProxy) {
+          request({
+            method: req.method,
+            uri: uri,
+            form: req.body
+          }, function(err, response, resBody){
+            if(err){
+              conssole.log('In Proxy.Url: '+ uri +'; form-data: '+util.inspect(req.body)+'. Error: '+util.inherits(err));
+              res.send('proxy error');
+            }else{
+              res.send(response.statusCode, resBody);
+              console.log('In Proxy.Url: '+ uri +'; form-data: '+util.inspect(req.body)+'. Success.');
+            }
+          });
           console.log('In Proxy.Url: '+ uri +'; form-data: '+util.inspect(req.body));
-          req.pipe(r).pipe(res);
         }else{
           console.log('Stop Proxy.Url: '+ uri +'; form-data: '+util.inspect(req.body));
           res.jsonp(null);
