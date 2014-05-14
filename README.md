@@ -42,7 +42,7 @@ node apifaker.js
 
 1. 将你希望模拟的api的域名host到工具部署所在机器，到工具页面添加对应api信息，然后浏览器中访问api即可看到返回模拟的数据。
 
-例如，工具自带两个qq地图的webservice接口示例。你只需要在你本机做以下host
+例如，工具自带两个qq地图的webservice接口示例。你只需要在你本机做以下host（192.210.195.6是demo.apifaker.com的ip）
 ```
 192.210.195.6 apis.map.qq.com
 ```
