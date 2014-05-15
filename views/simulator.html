@@ -62,9 +62,9 @@
     </div>
 </div> <!-- /container -->
 
-<script src="<%=config.staticUrl%>assets/js/brand/jsoneditor-min.js"></script>
-<script src="<%=config.staticUrl%>assets/js/brand/ace-min.js"></script>
-<script src="<%=config.staticUrl%>assets/js/common.js"></script>
+<script src="<%=config.staticUrl%>/assets/js/brand/jsoneditor-min.js"></script>
+<script src="<%=config.staticUrl%>/assets/js/brand/ace-min.js"></script>
+<script src="<%=config.staticUrl%>/assets/js/common.js"></script>
 
 <script type="text/javascript" >
 
@@ -163,11 +163,11 @@
                 return false;
             }
             params.apiId = '<%=apiId%>';
-            var ajaxUrl = '<%=config.siteUrl%>simulator/add/<%=apiId%>';
+            var ajaxUrl = '<%=config.siteUrl+config.managerPath%>simulator/add/<%=apiId%>';
             <%
             if(simulator && simulator._id){
             %>
-                ajaxUrl = '<%=config.siteUrl%>simulator/edit/<%=simulator._id%>';
+                ajaxUrl = '<%=config.siteUrl+config.managerPath%>simulator/edit/<%=simulator._id%>';
                 params._id = '<%=simulator._id%>';
             <%}%>
             console.log(params);
@@ -178,7 +178,7 @@
                 success: function(results){
                     if(results.retcode == 0){
                         alert(results.retmsg || '<%=t("tips.operationSuccess")%>');
-                        location.href = '<%=config.siteUrl%>simulators/<%=apiId%>';
+                        location.href = '<%=config.siteUrl+config.managerPath%>simulators/<%=apiId%>';
                     }else{
                         alert(results.retmsg || '<%=t("tips.operationFailed")%>');
                     }

@@ -63,8 +63,8 @@ app.use(utils.rightsControl);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser());
 
-app.use(require('./controllers/generator'));
-app.use(require('./controllers/simulator'));
+app.use(config.managerPath, require('./controllers/api'));
+app.use(config.managerPath, require('./controllers/simulator'));
 app.use(require('./controllers/handler'));
 
 app.listen(config.port, function(){

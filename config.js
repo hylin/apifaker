@@ -31,8 +31,12 @@ var config = {
     "p2": "Project2",
     "p3": "Project3"
   },
-  staticUrl: "http://localhost/",
-  siteUrl: "http://localhost/",
+  //url of this site.don't add last '/'
+  siteUrl: "http://localhost",
+  //assets(files under public dir) url of api faker,usually same as siteUrl.Unless you expect to use cdn.don't add last '/'
+  staticUrl: "http://localhost",
+  //api manager's default path.
+  managerPath: "/~apifaker/",
   //use to auto return query's value
   returnPlaceholder: "$return$",
   //override the callback function name in a jsonp request

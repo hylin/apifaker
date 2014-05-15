@@ -158,9 +158,9 @@
     </div>
 </div> <!-- /container -->
 
-<script src="<%=config.staticUrl%>assets/js/brand/jsoneditor-min.js"></script>
-<script src="<%=config.staticUrl%>assets/js/brand/ace-min.js"></script>
-<script src="<%=config.staticUrl%>assets/js/common.js"></script>
+<script src="<%=config.staticUrl%>/assets/js/brand/jsoneditor-min.js"></script>
+<script src="<%=config.staticUrl%>/assets/js/brand/ace-min.js"></script>
+<script src="<%=config.staticUrl%>/assets/js/common.js"></script>
 
 <script type="text/javascript" >
 
@@ -337,11 +337,11 @@
             if(!check){
                 return false;
             }
-            var ajaxUrl = '<%=config.siteUrl%>apis/add';
+            var ajaxUrl = '<%=config.siteUrl+config.managerPath%>apis/add';
             <%
             if(locals.apiInfo && apiInfo._id){
             %>
-                ajaxUrl = '<%=config.siteUrl%>apis/edit/<%=apiInfo._id%>';
+                ajaxUrl = '<%=config.siteUrl+config.managerPath%>apis/edit/<%=apiInfo._id%>';
                 params._id = '<%=apiInfo._id%>';
             <%}%>
             console.log(params);
@@ -352,7 +352,7 @@
                 success: function(results){
                     if(results.retcode == 0){
                         alert(results.retmsg || '<%=t("tips.operationSuccess")%>');
-                        location.href = '<%=config.siteUrl%>';
+                        location.href = '<%=config.siteUrl+config.managerPath%>';
                     }else{
                         alert(results.retmsg || '<%=t("tips.operationFailed")%>');
                     }

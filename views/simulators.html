@@ -13,7 +13,7 @@
             <%=t('status')%>: <span class="label label-<%=apiInfo.isSimulate?'success':'warning'%>"><%=t('api.status.simulate.'+apiInfo.isSimulate)%></span>&nbsp;<span class="label label-<%=apiInfo.isProxy?'success':'warning'%>"><%=t('api.status.proxy.'+apiInfo.isProxy)%></span>
         </p>
         <p>
-            <a href="<%=config.siteUrl%>simulator/add/<%=apiInfo._id%>"><button type="button" class="btn btn-primary"><%=t("addSimulator")%></button></a>
+            <a href="<%=config.siteUrl+config.managerPath%>simulator/add/<%=apiInfo._id%>"><button type="button" class="btn btn-primary"><%=t("addSimulator")%></button></a>
         </p>
     </div>
     <%
@@ -27,7 +27,7 @@
     <div class="col-md-3">
         <div class="thumbnail">
             <div class="caption simulator-item">
-                <h3><a href="<%=config.siteUrl%>simulator/edit/<%=simulators[i]._id%>"><%=i+1%> - <%=simulators[i].mark%></a></a></h3>
+                <h3><a href="<%=config.siteUrl+config.managerPath%>simulator/edit/<%=simulators[i]._id%>"><%=i+1%> - <%=simulators[i].mark%></a></a></h3>
                 <p>
                     <%=t("updateTime")%>：<%=: simulators[i].updateTime | dateFormat:'%y-%M-%d %h:%m:%s'%>
                     <br/>
@@ -54,11 +54,11 @@
                     }
                     $.ajax({
                         type: 'get',
-                        url: '<%=config.siteUrl%>simulator/delete/'+$(this).data('id'),
+                        url: '<%=config.siteUrl+config.managerPath%>simulator/delete/'+$(this).data('id'),
                         success: function(results){
                             if(results.retcode == 0){
                                 alert('<%=t("tips.deleteSuccess")%>');
-                                location.href = '<%=config.siteUrl%>simulators/<%=apiInfo._id%>';
+                                location.href = '<%=config.siteUrl+config.managerPath%>simulators/<%=apiInfo._id%>';
                             }else{
                                 alert(results.retmsg || '<%=t("tips.deleteFailed")%>');
                             }
