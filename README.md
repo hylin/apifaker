@@ -1,5 +1,5 @@
 # Api Faker
-这里可以查看示例：[http://demo.apifaker.com/](http://demo.apifaker.com/)
+这里可以查看示例：[http://demo.apifaker.com/~apifaker/](http://demo.apifaker.com/~apifaker/)
 
 ### 简介
 
