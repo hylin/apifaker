@@ -6,7 +6,7 @@
         <div class="form-group">
             <label for="api-project" class="control-label col-md-2"><%=t("api.project")%>：</label>
             <div class="col-md-2">
-                <select class="form-control" id="api-project">
+                <select class="form-control" id="api-project"  autocomplete="off">
                     <%
                     for(var p in config.projects){
                     %>
@@ -62,19 +62,17 @@
         <div class="form-group">
             <label class="control-label col-md-2"><%=t("api.type")%>：</label>
             <div class="col-md-4">
-                <label class="checkbox-inline"><input type="checkbox" name="api-type" value="jsonp" <%if(apiInfo.type.indexOf('jsonp')>-1){%>checked<%}%>>jsonp</label>
-                <label class="checkbox-inline"><input type="checkbox" name="api-type" value="json" <%if(apiInfo.type.indexOf('json')>-1){%>checked<%}%>>json</label>
-                <!--
-                <label class="checkbox-inline"><input type="checkbox" name="api-type" value="text" <%if(apiInfo.type.indexOf('text')>-1){%>checked<%}%>>text</label>
-                -->
+                <label class="radio-inline"><input type="radio" name="api-type" value="json" <%if(apiInfo.type == 'json'){%>checked<%}%> autocomplete="off">json/jsonp</label>
+                <label class="radio-inline"><input type="radio" name="api-type" value="text" <%if(apiInfo.type == 'text'){%>checked<%}%> autocomplete="off">text</label>
+                <label class="radio-inline"><input type="radio" name="api-type" value="xml" <%if(apiInfo.type == 'xml'){%>checked<%}%> autocomplete="off">xml</label>
                 <span class="help-block"><%-t("help.type")%></span>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-md-2"><%=t("api.httpType")%>：</label>
             <div class="col-md-2">
-                <label class="checkbox-inline"><input type="checkbox" name="api-http-type" value="get" <%if(apiInfo.httpType.indexOf('get')>-1){%>checked<%}%>>get</label>
-                <label class="checkbox-inline"><input type="checkbox" name="api-http-type" value="post" <%if(apiInfo.httpType.indexOf('post')>-1){%>checked<%}%>>post</label>
+                <label class="checkbox-inline"><input type="checkbox" name="api-http-type" value="get" <%if(apiInfo.httpType.indexOf('get')>-1){%>checked<%}%> autocomplete="off">get</label>
+                <label class="checkbox-inline"><input type="checkbox" name="api-http-type" value="post" <%if(apiInfo.httpType.indexOf('post')>-1){%>checked<%}%> autocomplete="off">post</label>
                 <span class="help-block"><%-t("help.httpType")%></span>
             </div>
         </div>
@@ -133,6 +131,9 @@
                 <br/><br/>
                 <button type="button" class="btn btn-info btn-sm" title="<%=t('tips.moveRightToLeft')%>" data-action="to-left"><span class="glyphicon glyphicon-chevron-left"></span></button>
             </div>
+            <div id="text-editor" class="col-md-12">
+
+            </div>
             <div id="jsoneditor-code" class="col-md-6">
 
             </div>
@@ -167,8 +168,20 @@
     ;(function(){
         var params = [],
                 results = [],
+                $apiType = $('[name="api-type"]'),
                 $paramsWrapper = $('#params-wrapper'),
                 $resultsWrapper = $('#results-wrapper');
+        $apiType.click(function(){
+            var val = this.value;
+            if('json' == val){
+                $('#text-editor').hide();
+                $('#jsoneditor-code,#jsoneditor-tree,.editor-tools').show();
+            }else{
+                $('#jsoneditor-code,#jsoneditor-tree,.editor-tools').hide();
+                $('#text-editor').show();
+                texteditor.getSession().setMode('ace/mode/'+val);
+            }
+        });
         try {
             params = <%-JSON.stringify(apiInfo.params)%>;
         }catch (e){
@@ -196,19 +209,25 @@
         });
         var treeeditor = new jsoneditor.JSONEditor($('#jsoneditor-tree')[0]);
         var codeeditor = new jsoneditor.JSONEditor($('#jsoneditor-code')[0], {mode:'code'});
+        var texteditor = ace.edit('text-editor');
         var defaultDemo = {
             "retcode": 0,
             "retmsg": "success",
-            "data": [1]
+            "data": []
         };
         var demo = null;
         try {
-            demo = JSON.parse('<%-JSON.stringify(apiInfo.demo)%>');
+            demo = <%-JSON.stringify(apiInfo.demo)%>;
         }catch (e){
             demo = defaultDemo;
         }
         treeeditor.set(demo);
         codeeditor.set(demo);
+        texteditor.getSession().setUseWrapMode(true);
+        texteditor.getSession().setMode('ace/mode/xml');
+        texteditor.setValue('<%-apiInfo.demo%>');
+
+        $apiType.filter(':checked').click();
 
         $('.editor-tools').on('click','[data-action]',function(){
             var action = $(this).data('action');
@@ -274,7 +293,7 @@
                     host = $('#api-host').val(),
                     path = $('#api-path').val(),
                     urlAddon = $('#api-url-addon').val(),
-                    $type = $('[name="api-type"]'),
+                    $type = $('[name="api-type"]:checked').val(),
                     $httpType = $('[name="api-http-type"]'),
                     isSimulate = $('#api-is-simulate').is(':checked'),
                     isProxy = $('#api-is-proxy').is(':checked');
@@ -286,7 +305,7 @@
             params.host = host;
             params.path = path;
             params.urlAddon = urlAddon;
-            params.type = getCheckboxVal($type);
+            params.type = $type;
             params.httpType = getCheckboxVal($httpType);
             params.isSimulate = isSimulate;
             params.isProxy = isProxy;
@@ -329,7 +348,11 @@
             });
             params.results = defaultResults;
             try{
-                params.demo = codeeditor.get();
+                if(params.type == 'json') {
+                    params.demo = codeeditor.get();
+                }else{
+                    params.demo = texteditor.getSession().getValue();
+                }
             }catch (e){
                 alert('<%=t("tips.demoFormatErr")%>：'+ e.message);
                 check = false;

@@ -55,6 +55,10 @@ a, a:focus, a:visited{
     margin-left: -17px;
     z-index: 999;
 }
+#text-editor{
+    display: none;
+    height: 400px;
+}
 #jsoneditor-code{
     height: 400px;
 }

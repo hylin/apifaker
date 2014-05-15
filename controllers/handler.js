@@ -161,7 +161,7 @@ router.route('*')
             form: req.body
           }, function(err, response, resBody){
             if(err){
-              conssole.log('In Proxy.Url: '+ uri +'; form-data: '+util.inspect(req.body)+'. Error: '+util.inherits(err));
+              console.log('In Proxy.Url: '+ uri +'; form-data: '+util.inspect(req.body)+'. Error: '+util.inherits(err));
               res.send('proxy error');
             }else{
               res.send(response.statusCode, resBody);
@@ -174,9 +174,17 @@ router.route('*')
           res.jsonp(null);
         }
       }else {
-        processReturnHolder(results.matchSimulator.simResults, query);
-        console.log('Simulator Matched. Url: '+ uri +'; form-data: '+util.inspect(req.body));
-        res.jsonp(results.matchSimulator.simResults);
+        if(matchedApi.type == 'json') {
+          processReturnHolder(results.matchSimulator.simResults, query);
+          res.jsonp(results.matchSimulator.simResults);
+        }else if(matchedApi.type == 'text'){
+          res.type('text');
+          res.send(results.matchSimulator.simResults);
+        }else if(matchedApi.type == 'xml'){
+          res.type('xml');
+          res.send(results.matchSimulator.simResults);
+        }
+        console.log('Simulator Matched. Url: ' + uri + '; form-data: ' + util.inspect(req.body));
       }
     });
 

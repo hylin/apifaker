@@ -100,15 +100,21 @@
 <script type="text/javascript" >
 
     ;(function(){
-        var codeeditor = new jsoneditor.JSONEditor($('#jsoneditor-code')[0], {mode:'code'});
-        var defaultDemo = '<%=t("tips.noData")%>';
-        var demo = null;
-        try {
-            demo = JSON.parse('<%-JSON.stringify(apiInfo.demo)%>');
-        }catch (e){
-            demo = defaultDemo;
+        if('json' == '<%=apiInfo.type%>') {
+            var codeeditor = new jsoneditor.JSONEditor($('#jsoneditor-code')[0], {mode: 'code'});
+            var demo = null;
+            try {
+                demo = <%-JSON.stringify(apiInfo.demo)%>;
+            } catch (e) {
+                demo = {};
+            }
+            codeeditor.set(demo);
+        }else{
+            var texteditor = ace.edit('jsoneditor-code');
+            texteditor.getSession().setUseWrapMode(true);
+            texteditor.getSession().setMode('ace/mode/<%=apiInfo.type%>');
+            texteditor.getSession().setValue('<%-apiInfo.demo%>');
         }
-        codeeditor.set(demo);
     })();
 </script>
 <% include inc/footer.html %>

@@ -47,6 +47,9 @@
                     <br/><br/>
                     <button type="button" class="btn btn-info btn-sm" title="<%=t('tips.moveRightToLeft')%>" data-action="to-left"><span class="glyphicon glyphicon-chevron-left"></span></button>
                 </div>
+                <div id="text-editor" class="col-md-12">
+
+                </div>
                 <div id="jsoneditor-code" class="col-md-6">
 
                 </div>
@@ -93,22 +96,32 @@
             });
         });
         $paramsWrapper.append('<span class="help-block"><%-t("help.simParams")%></span>');
-        var treeeditor = new jsoneditor.JSONEditor($('#jsoneditor-tree')[0]);
-        var codeeditor = new jsoneditor.JSONEditor($('#jsoneditor-code')[0], {mode:'code'});
-        var defaultSimResults = {
-            "retcode": 0,
-            "retmsg": "success",
-            "data": []
-        };
-        var simResults = null;
-        try {
-            simResults = JSON.parse('<%-JSON.stringify(simulator.simResults || apiInfo.demo)%>');
-        }catch (e){
-            simResults = defaultSimResults;
-        }
-        treeeditor.set(simResults);
-        codeeditor.set(simResults);
 
+        var treeeditor,codeeditor,texteditor;
+        if('json' == '<%=apiInfo.type%>') {
+            treeeditor = new jsoneditor.JSONEditor($('#jsoneditor-tree')[0]);
+            codeeditor = new jsoneditor.JSONEditor($('#jsoneditor-code')[0], {mode: 'code'});
+            var defaultSimResults = {
+                "retcode": 0,
+                "retmsg": "success",
+                "data": []
+            };
+            var simResults = null;
+            try {
+                simResults = <%-JSON.stringify(simulator.simResults || apiInfo.demo) %>;
+            } catch (e) {
+                simResults = defaultSimResults;
+            }
+            treeeditor.set(simResults);
+            codeeditor.set(simResults);
+        }else {
+            texteditor = ace.edit('text-editor');
+            texteditor.getSession().setUseWrapMode(true);
+            texteditor.getSession().setMode('ace/mode/<%=apiInfo.type%>');
+            texteditor.getSession().setValue('<%-simulator.simResults || apiInfo.demo%>');
+            $('#jsoneditor-code,#jsoneditor-tree,.editor-tools').hide();
+            $('#text-editor').show();
+        }
         $('.editor-tools').on('click','[data-action]',function(){
             var action = $(this).data('action');
             try{
@@ -156,7 +169,11 @@
             params.mark = $('#sim-mark').val();
             params.simParams = defaultParams;
             try{
-                params.simResults = codeeditor.get();
+                if('json' == '<%=apiInfo.type%>') {
+                    params.simResults = codeeditor.get();
+                }else{
+                    params.simResults = texteditor.getSession().getValue();
+                }
             }catch (err){
                 alert('<%=t("tips.requireResultField")%>：'+ err.message);
                 e.preventDefault();

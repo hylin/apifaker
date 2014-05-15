@@ -20,5 +20,9 @@
     "serve-favicon": "2.0.0",
     "request": "2.34.0",
     "i18next": "1.7.4"
+  },
+  "devDependencies": {
+    "should": "^3.3.1",
+    "supertest": "^0.12.1"
   }
 }
