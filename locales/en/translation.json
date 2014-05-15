@@ -98,7 +98,7 @@
     "purpose": "Input Api's purpose,eg.'Get user's infomation'",
     "desc": "Input Api's usage,description and so on,eg.'this api support query by userid or username'",
     "url": "eg.http://api.example.com/v1/get_user_info,input as bellows.<br>Host:http://api.example.com，Path:/v1/get_user_info,Url Addon:<br/>If Api is differentiated by param,please input it into 'Url Addon',otherwise donot input this field.<br/>eg.http://www.example.com/service?method=get_user_info,input 'method=get_user_info' into 'Url Addon' field",
-    "type": "Usually,should support both jsonp and json",
+    "type": "Simulator will output appropriate Content-Type",
     "httpType": "Suggest to support both",
     "params": "If param has already included in 'Url' field,don't input again.",
     "results": "Be sure choose proper type",

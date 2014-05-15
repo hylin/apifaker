@@ -97,7 +97,7 @@
     "purpose": "填写接口的使用用途。例如：获取用户基本信息",
     "desc": "填写接口的使用说明、注意事项等。例如：接口支持传入用户id或者用户名称",
     "url": "例如接口http://api.example.com/v1/get_user_info，则按如下方式填写。<br>域名：http://api.example.com，路径：/v1/get_user_info，附加参数：<br/>如果接口是通过参数来区分，请在附加参数里填写，否则不用填写附加参数。<br/>例如：http://www.example.com/service?method=get_user_info接口，则附加参数里填写method=get_user_info",
-    "type": "一般情况下jsonp和json应同时支持",
+    "type": "模拟器会输出对应类型的Content-Type",
     "httpType": "建议都支持",
     "params": "如果接口地址中已经包含了的固定参数，就不要再次填写了。<br/>例如上面接口地址中示例的method参数，这里就不用填写",
     "results": "请务必正确选择返回字段的类型",
