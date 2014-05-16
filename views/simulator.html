@@ -71,71 +71,84 @@
 
 <script type="text/javascript" >
 
-    ;(function(){
-        var params = [],
-                simParams = [],
-                $paramsWrapper = $('#params-wrapper');
-        try {
-            params = <%-JSON.stringify(apiInfo.params)%>;
-        }catch (e){
-            params = [];
-        }
-        try {
-            simParams = <%-JSON.stringify(simulator.simParams)%>;
-        }catch (e){
-            simParams = [];
-        }
-        $.each(params, function(i,v){
-            addParamRow();
-            $paramsWrapper.find('[name="param-name"]').eq(i).val(v.name);
-            $paramsWrapper.find('[name="param-desc"]').eq(i).val(v.desc);
-            $.each(simParams, function(j,r){
-                if(v.name == r.name){
-                    $paramsWrapper.find('[name="param-value"]').eq(i).val(r.value);
+    $(document).ready(function(){
+        var treeeditor,codeeditor,texteditor;
+        var $paramsWrapper = $('#params-wrapper');
+
+        function bindEvents(){
+            $('.editor-tools').on('click','[data-action]',function(){
+                var action = $(this).data('action');
+                try{
+                    if(action == 'to-right'){
+                        treeeditor.set(codeeditor.get());
+                    }else if (action == 'to-left'){
+                        codeeditor.set(treeeditor.get());
+                    }
+                }catch (e){
+                    alert('<%=t("tips.jsonFormatErr")%>：'+ e.message);
+                    e.preventDefault();
+                    return false;
                 }
             });
-        });
-        $paramsWrapper.append('<span class="help-block"><%-t("help.simParams")%></span>');
 
-        var treeeditor,codeeditor,texteditor;
-        if('json' == '<%=apiInfo.type%>') {
-            treeeditor = new jsoneditor.JSONEditor($('#jsoneditor-tree')[0]);
-            codeeditor = new jsoneditor.JSONEditor($('#jsoneditor-code')[0], {mode: 'code'});
-            var defaultSimResults = {
-                "retcode": 0,
-                "retmsg": "success",
-                "data": []
-            };
-            var simResults = null;
-            try {
-                simResults = <%-JSON.stringify(simulator.simResults || apiInfo.demo) %>;
-            } catch (e) {
-                simResults = defaultSimResults;
-            }
-            treeeditor.set(simResults);
-            codeeditor.set(simResults);
-        }else {
-            texteditor = ace.edit('text-editor');
-            texteditor.getSession().setUseWrapMode(true);
-            texteditor.getSession().setMode('ace/mode/<%=apiInfo.type%>');
-            texteditor.getSession().setValue('<%-simulator.simResults || apiInfo.demo%>');
-            $('#jsoneditor-code,#jsoneditor-tree,.editor-tools').hide();
-            $('#text-editor').show();
+            $('#add-simulator-form').on('submit', submitSimulator);
         }
-        $('.editor-tools').on('click','[data-action]',function(){
-            var action = $(this).data('action');
-            try{
-                if(action == 'to-right'){
-                    treeeditor.set(codeeditor.get());
-                }else if (action == 'to-left'){
-                    codeeditor.set(treeeditor.get());
-                }
+
+        function initParams(){
+            var apiParams = [],
+                    simParams = [];
+            try {
+                apiParams = <%-JSON.stringify(apiInfo.params)%>;
             }catch (e){
-                alert('<%=t("tips.jsonFormatErr")%>：'+ e.message);
-                e.preventDefault();
-                return false;
+                apiParams = [];
             }
-        });
+            try {
+                simParams = <%-JSON.stringify(simulator.simParams)%>;
+            }catch (e){
+                simParams = [];
+            }
+            $.each(apiParams, function(i,v){
+                addParamRow();
+                $paramsWrapper.find('[name="param-name"]').eq(i).val(v.name);
+                $paramsWrapper.find('[name="param-desc"]').eq(i).val(v.desc);
+                $.each(simParams, function(j,r){
+                    if(v.name == r.name){
+                        $paramsWrapper.find('[name="param-value"]').eq(i).val(r.value);
+                    }
+                });
+            });
+            $paramsWrapper.append('<span class="help-block"><%-t("help.simParams")%></span>');
+        }
+
+
+        function initEditors(){
+            if('json' == '<%=apiInfo.type%>') {
+                treeeditor = new jsoneditor.JSONEditor($('#jsoneditor-tree')[0]);
+                codeeditor = new jsoneditor.JSONEditor($('#jsoneditor-code')[0], {mode: 'code'});
+                var defaultSimResults = {
+                    "retcode": 0,
+                    "retmsg": "success",
+                    "data": []
+                };
+                var simResults = null;
+                try {
+                    simResults = <%-JSON.stringify(simulator.simResults || apiInfo.demo) %>;
+                } catch (e) {
+                    simResults = defaultSimResults;
+                }
+                treeeditor.set(simResults);
+                codeeditor.set(simResults);
+            }else {
+                texteditor = ace.edit('text-editor');
+                texteditor.getSession().setUseWrapMode(true);
+                texteditor.getSession().setMode('ace/mode/<%=apiInfo.type%>');
+                texteditor.getSession().setValue('<%-simulator.simResults || apiInfo.demo%>');
+                $('#jsoneditor-code, #jsoneditor-tree, .editor-tools').hide();
+                $('#text-editor').show();
+            }
+        }
+
+
 
         function addParamRow(){
             var addParamTpl = '<div class="input-group margin-top-20" data-role="param-row">'
@@ -148,8 +161,7 @@
                     +'</div>';
             $paramsWrapper.append(addParamTpl);
         }
-
-        $('#add-simulator-form').on('submit', function(e){
+        function submitSimulator(e){
             var params = {};
 
             var defaultParams = [];
@@ -181,7 +193,7 @@
             }
             params.apiId = '<%=apiId%>';
             var ajaxUrl = '<%=config.siteUrl+config.managerPath%>simulator/add/<%=apiId%>';
-            <%
+        <%
             if(simulator && simulator._id){
             %>
                 ajaxUrl = '<%=config.siteUrl+config.managerPath%>simulator/edit/<%=simulator._id%>';
@@ -210,8 +222,16 @@
             });
             e.preventDefault();
             return false;
-        });
-    })();
+        }
+
+        function init(){
+            bindEvents();
+            initParams();
+            initEditors();
+        }
+
+        init();
+    });
 
 
 </script>

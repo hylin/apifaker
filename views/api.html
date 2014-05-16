@@ -165,125 +165,16 @@
 
 <script type="text/javascript" >
 
-    ;(function(){
-        var params = [],
-                results = [],
+    $(document).ready(function(){
+        var treeeditor = new jsoneditor.JSONEditor($('#jsoneditor-tree')[0]),
+                codeeditor = new jsoneditor.JSONEditor($('#jsoneditor-code')[0], {mode: 'code'}),
+                texteditor = ace.edit('text-editor'),
                 $apiType = $('[name="api-type"]'),
                 $paramsWrapper = $('#params-wrapper'),
-                $resultsWrapper = $('#results-wrapper');
-        $apiType.click(function(){
-            var val = this.value;
-            if('json' == val){
-                $('#text-editor').hide();
-                $('#jsoneditor-code,#jsoneditor-tree,.editor-tools').show();
-            }else{
-                $('#jsoneditor-code,#jsoneditor-tree,.editor-tools').hide();
-                $('#text-editor').show();
-                texteditor.getSession().setMode('ace/mode/'+val);
-            }
-        });
-        try {
-            params = <%-JSON.stringify(apiInfo.params)%>;
-        }catch (e){
-            params = [];
-        }
-        $.each(params, function(i,v){
-            if(i != 0){
-                addParamRow();
-            }
-            $paramsWrapper.find('[name="param-name"]').eq(i).val(v.name);
-            $paramsWrapper.find('[name="param-desc"]').eq(i).val(v.desc);
-        });
-        try {
-            results = <%-JSON.stringify(apiInfo.results)%>;
-        }catch (e){
-            results = [];
-        }
-        $.each(results, function(i,v){
-            if(i != 0){
-                addResultRow();
-            }
-            $resultsWrapper.find('[name="result-name"]').eq(i).val(v.name);
-            $resultsWrapper.find('[name="result-type"]').eq(i).val(v.type);
-            $resultsWrapper.find('[name="result-desc"]').eq(i).val(v.desc);
-        });
-        var treeeditor = new jsoneditor.JSONEditor($('#jsoneditor-tree')[0]);
-        var codeeditor = new jsoneditor.JSONEditor($('#jsoneditor-code')[0], {mode:'code'});
-        var texteditor = ace.edit('text-editor');
-        var defaultDemo = {
-            "retcode": 0,
-            "retmsg": "success",
-            "data": []
-        };
-        var demo = null;
-        try {
-            demo = <%-JSON.stringify(apiInfo.demo)%>;
-        }catch (e){
-            demo = defaultDemo;
-        }
-        treeeditor.set(demo);
-        codeeditor.set(demo);
-        texteditor.getSession().setUseWrapMode(true);
-        texteditor.getSession().setMode('ace/mode/xml');
-        texteditor.setValue('<%-apiInfo.demo%>');
+                $resultsWrapper = $('#results-wrapper'),
+                $addApiForm = $('#add-api-form');
 
-        $apiType.filter(':checked').click();
-
-        $('.editor-tools').on('click','[data-action]',function(){
-            var action = $(this).data('action');
-            try{
-                if(action == 'to-right'){
-                    treeeditor.set(codeeditor.get());
-                }else if (action == 'to-left'){
-                    codeeditor.set(treeeditor.get());
-                }
-            }catch (e){
-                alert('<%=t("tips.jsonFormatErr")%>：'+ e.message);
-            }
-        });
-
-        function addParamRow(){
-            var addParamTpl = '<div class="input-group margin-top-20" data-role="param-row">'
-                    +'<span class="input-group-addon"><%=t("api.paramName")%></span>'
-                    +'<input type="text" class="form-control" value="" name="param-name" required>'
-                    +'<span class="input-group-addon"><%=t("api.paramDesc")%></span>'
-                    +'<input type="text" class="form-control"  value="" name="param-desc" required>'
-                    +'<span class="input-group-addon glyphicon glyphicon-minus cursor-pointer" data-action="remove"  title="<%=t("clickToRemove")%>"></span>'
-                    +'</div>';
-            $('#api-add-param').parent().before(addParamTpl);
-        }
-
-        function addResultRow(){
-            var addResultTpl = '<div class="input-group margin-top-20" data-role="result-row">'
-                    +'<span class="input-group-addon"><%=t("api.resultName")%></span>'
-                    +'<input type="text" class="form-control" value="" name="result-name" required>'
-                    +'<span class="input-group-addon"><%=t("api.resultType")%></span>'
-                    +'<select class="form-control" name="result-type" required>'
-                    +'<option value="String"><%=t("types.string")%></option>'
-                    +'<option value="Number"><%=t("types.number")%></option>'
-                    +'<option value="Array"><%=t("types.array")%></option>'
-                    +'<option value="Boolean"><%=t("types.boolean")%></option>'
-                    +'<option value="Object"><%=t("types.object")%></option>'
-                    +'</select>'
-                    +'<span class="input-group-addon"><%=t("api.resultDesc")%></span>'
-                    +'<input type="text" class="form-control"  value="" name="result-desc" required>'
-                    +'<span class="input-group-addon glyphicon glyphicon-minus cursor-pointer" data-action="remove"  title="<%=t("clickToRemove")%>"></span>'
-                    +'</div>';
-            $('#api-add-result').parent().before(addResultTpl);
-        }
-
-        $('#add-api-form').on('click','#api-add-param,#api-add-result,[data-action="remove"]', function(){
-            var $this = $(this);
-                if (this.id == 'api-add-param') {
-                    addParamRow();
-                }else if (this.id == 'api-add-result') {
-                    addResultRow();
-                } else {
-                    $this.parent().remove();
-                }
-        });
-
-        $('#add-api-form').on('submit', function(e){
+        function addApi(e){
             var params = {},
                     project = $('#api-project').val(),
                     developer = $('#api-developer').val(),
@@ -360,12 +251,14 @@
             if(!check){
                 return false;
             }
-            var ajaxUrl = '<%=config.siteUrl+config.managerPath%>apis/add';
+            var ajaxUrl = '';
             <%
             if(locals.apiInfo && apiInfo._id){
             %>
                 ajaxUrl = '<%=config.siteUrl+config.managerPath%>apis/edit/<%=apiInfo._id%>';
                 params._id = '<%=apiInfo._id%>';
+            <%}else{%>
+                ajaxUrl = '<%=config.siteUrl+config.managerPath%>apis/add'
             <%}%>
             console.log(params);
             $.ajax({
@@ -386,7 +279,130 @@
             });
             e.preventDefault();
             return false;
-        });
+        }
+        function bindEvents() {
+            $apiType.click(function () {
+                var val = this.value;
+                if ('json' == val) {
+                    $('#text-editor').hide();
+                    $('#jsoneditor-code,#jsoneditor-tree,.editor-tools').show();
+                } else {
+                    $('#jsoneditor-code,#jsoneditor-tree,.editor-tools').hide();
+                    $('#text-editor').show();
+                    texteditor.getSession().setMode('ace/mode/' + val);
+                }
+            });
+            $('.editor-tools').on('click','[data-action]',function(){
+                var action = $(this).data('action');
+                try{
+                    if(action == 'to-right'){
+                        treeeditor.set(codeeditor.get());
+                    }else if (action == 'to-left'){
+                        codeeditor.set(treeeditor.get());
+                    }
+                }catch (e){
+                    alert('<%=t("tips.jsonFormatErr")%>：'+ e.message);
+                }
+            });
+            $addApiForm.on('click','#api-add-param,#api-add-result,[data-action="remove"]', function(){
+                var $this = $(this);
+                if (this.id == 'api-add-param') {
+                    addParamRow();
+                }else if (this.id == 'api-add-result') {
+                    addResultRow();
+                } else {
+                    $this.parent().remove();
+                }
+            }).submit(addApi);
+        }
+        function initParams(){
+            var apiParams = [];
+            try {
+                apiParams = <%-JSON.stringify(apiInfo.params)%>;
+            }catch (e){
+                apiParams = [];
+            }
+            $.each(apiParams, function(i,v){
+                if(i != 0){
+                    addParamRow();
+                }
+                $paramsWrapper.find('[name="param-name"]').eq(i).val(v.name);
+                $paramsWrapper.find('[name="param-desc"]').eq(i).val(v.desc);
+            });
+        }
+        function initResults(){
+            var apiResults = [];
+            try {
+                apiResults = <%-JSON.stringify(apiInfo.results)%>;
+            }catch (e){
+                apiResults = [];
+            }
+            $.each(apiResults, function(i,v){
+                if(i != 0){
+                    addResultRow();
+                }
+                $resultsWrapper.find('[name="result-name"]').eq(i).val(v.name);
+                $resultsWrapper.find('[name="result-type"]').eq(i).val(v.type);
+                $resultsWrapper.find('[name="result-desc"]').eq(i).val(v.desc);
+            });
+        }
+
+        function initEditors(){
+            var defaultDemo = {
+                "retcode": 0,
+                "retmsg": "success",
+                "data": []
+            };
+            var demo = null;
+            try {
+                demo = <%-JSON.stringify(apiInfo.demo)%>;
+            }catch (e){
+                demo = defaultDemo;
+            }
+            treeeditor.set(demo);
+            codeeditor.set(demo);
+            texteditor.getSession().setUseWrapMode(true);
+            texteditor.getSession().setMode('ace/mode/xml');
+            texteditor.setValue('<%-apiInfo.demo%>');
+        }
+
+        function init(){
+            bindEvents();
+            initParams();
+            initResults();
+            initEditors();
+            $apiType.filter(':checked').click();
+        }
+
+        function addParamRow(){
+            var addParamTpl = '<div class="input-group margin-top-20" data-role="param-row">'
+                    +'<span class="input-group-addon"><%=t("api.paramName")%></span>'
+                    +'<input type="text" class="form-control" value="" name="param-name" required>'
+                    +'<span class="input-group-addon"><%=t("api.paramDesc")%></span>'
+                    +'<input type="text" class="form-control"  value="" name="param-desc" required>'
+                    +'<span class="input-group-addon glyphicon glyphicon-minus cursor-pointer" data-action="remove"  title="<%=t("clickToRemove")%>"></span>'
+                    +'</div>';
+            $('#api-add-param').parent().before(addParamTpl);
+        }
+
+        function addResultRow(){
+            var addResultTpl = '<div class="input-group margin-top-20" data-role="result-row">'
+                    +'<span class="input-group-addon"><%=t("api.resultName")%></span>'
+                    +'<input type="text" class="form-control" value="" name="result-name" required>'
+                    +'<span class="input-group-addon"><%=t("api.resultType")%></span>'
+                    +'<select class="form-control" name="result-type" required>'
+                    +'<option value="String"><%=t("types.string")%></option>'
+                    +'<option value="Number"><%=t("types.number")%></option>'
+                    +'<option value="Array"><%=t("types.array")%></option>'
+                    +'<option value="Boolean"><%=t("types.boolean")%></option>'
+                    +'<option value="Object"><%=t("types.object")%></option>'
+                    +'</select>'
+                    +'<span class="input-group-addon"><%=t("api.resultDesc")%></span>'
+                    +'<input type="text" class="form-control"  value="" name="result-desc" required>'
+                    +'<span class="input-group-addon glyphicon glyphicon-minus cursor-pointer" data-action="remove"  title="<%=t("clickToRemove")%>"></span>'
+                    +'</div>';
+            $('#api-add-result').parent().before(addResultTpl);
+        }
 
         function getCheckboxVal($box){
             var results= [];
@@ -397,7 +413,9 @@
             });
             return results;
         }
-    })();
+
+        init();
+    });
 
 
 </script>
