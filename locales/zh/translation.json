@@ -16,6 +16,8 @@
   "clickToAdd": "点击添加一行",
   "addSimulator": "增加模拟数据",
   "status": "状态",
+  "required": "必须",
+  "optional": "可选",
   "menus": {
     "list": "接口列表",
     "add": "添加接口"
@@ -41,6 +43,7 @@
     "httpType": "接口http类型",
     "params": "接口参数",
     "paramName": "参数名",
+    "paramType": "类型",
     "paramValue": "值",
     "paramDesc": "说明",
     "results": "返回字段",

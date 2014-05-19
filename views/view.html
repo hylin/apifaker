@@ -42,7 +42,7 @@
         <div class="form-group">
             <label class="control-label col-md-2"><%=t("api.type")%>：</label>
             <div class="col-md-4">
-                <p class="form-control-static"><%=apiInfo.type%></p>
+                <p class="form-control-static"><%=apiInfo.type == 'json'?'json/jsonp':apiInfo.type%></p>
             </div>
         </div>
         <div class="form-group">
@@ -55,26 +55,56 @@
         <div class="form-group">
             <label class="control-label col-md-2"><%=t("api.params")%>：</label>
             <div class="col-md-8">
-                <%
-                apiInfo.params.forEach(function(v){
-                %>
-                <p class="form-control-static"><%=t("api.paramName")%>：<%=v.name%>&nbsp;&nbsp;<%=t("api.paramDesc")%>：<%=v.desc%></p>
-                <%
-                });
-                %>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th style="width: 120px;"><%=t('api.paramName')%></th>
+                        <th style="width: 60px;"><%=t('api.paramType')%></th>
+                        <th><%=t('api.paramDesc')%></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <%
+                        apiInfo.params.forEach(function(v){
+                        %>
+                        <tr>
+                            <td><%=v.name%></td>
+                            <td><%=v.type == '1'?t('required'):t('optional')%></td>
+                            <td><%=v.desc%></td>
+                        </tr>
+                        <%
+                        });
+                        %>
+                    </tbody>
+                </table>
             </div>
         </div>
         <hr/>
         <div class="form-group">
             <label class="control-label col-md-2"><%=t("api.results")%>：</label>
             <div class="col-md-8">
-                <%
-                apiInfo.results.forEach(function(v){
-                %>
-                <p class="form-control-static"><%=t("api.resultName")%>：<%=v.name%>&nbsp;&nbsp;<%=t("api.resultType")%>：<%=v.type%>&nbsp;&nbsp;<%=t("api.resultDesc")%>：<%=v.desc%></p>
-                <%
-                });
-                %>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th style="width: 120px;"><%=t('api.resultName')%></th>
+                        <th style="width: 60px;"><%=t('api.resultType')%></th>
+                        <th><%=t('api.resultDesc')%></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%
+                    apiInfo.results.forEach(function(v){
+                    %>
+                    <tr>
+                        <td><%=v.name%></td>
+                        <td><%=v.type%></td>
+                        <td><%=v.desc%></td>
+                    </tr>
+                    <%
+                    });
+                    %>
+                    </tbody>
+                </table>
             </div>
         </div>
         <hr/>

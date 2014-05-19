@@ -83,6 +83,11 @@
                 <div class="input-group" data-role="param-row">
                     <span class="input-group-addon"><%=t("api.paramName")%></span>
                     <input type="text" class="form-control" value="" name="param-name" required>
+                    <span class="input-group-addon"><%=t("api.paramType")%></span>
+                    <select name="param-type" class="form-control">
+                        <option value="1"><%=t('required')%></option>
+                        <option value="0"><%=t('optional')%></option>
+                    </select>
                     <span class="input-group-addon"><%=t("api.paramDesc")%></span>
                     <input type="text" class="form-control"  value="" name="param-desc" required>
                     <span class="input-group-addon glyphicon glyphicon-minus cursor-pointer" data-action="remove" title="<%=t('clickToRemove')%>"></span>
@@ -207,10 +212,12 @@
             $paramsWrapper.find('[data-role="param-row"]').each(function(i,v){
                 var $this = $(this),
                         name = $this.find('[name="param-name"]').val(),
+                        type = $this.find('[name="param-type"]').val(),
                         desc = $this.find('[name="param-desc"]').val();
                 if(name && desc){
                     defaultParams.push({
                         name: name,
+                        type: type,
                         desc: desc
                     });
                 }else{
@@ -327,6 +334,7 @@
                     addParamRow();
                 }
                 $paramsWrapper.find('[name="param-name"]').eq(i).val(v.name);
+                $paramsWrapper.find('[name="param-type"]').eq(i).val(v.type);
                 $paramsWrapper.find('[name="param-desc"]').eq(i).val(v.desc);
             });
         }
@@ -378,6 +386,11 @@
             var addParamTpl = '<div class="input-group margin-top-20" data-role="param-row">'
                     +'<span class="input-group-addon"><%=t("api.paramName")%></span>'
                     +'<input type="text" class="form-control" value="" name="param-name" required>'
+                    +'<span class="input-group-addon"><%=t("api.paramType")%></span>'
+                    +'<select name="param-type" class="form-control" autocomplete="off">'
+                    +'<option value="1"><%=t("required")%></option>'
+                    +'<option value="0"><%=t("optional")%></option>'
+                    +'</select>'
                     +'<span class="input-group-addon"><%=t("api.paramDesc")%></span>'
                     +'<input type="text" class="form-control"  value="" name="param-desc" required>'
                     +'<span class="input-group-addon glyphicon glyphicon-minus cursor-pointer" data-action="remove"  title="<%=t("clickToRemove")%>"></span>'

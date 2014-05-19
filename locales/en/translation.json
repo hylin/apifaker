@@ -16,6 +16,8 @@
   "clickToAdd": "Click To Add",
   "addSimulator": "Add Simulator",
   "status": "Status",
+  "required": "Required",
+  "optional": "Optional",
   "menus": {
     "list": "Api List",
     "add": "Add Api"
@@ -41,6 +43,7 @@
     "httpType": "Http Type",
     "params": "Params",
     "paramName": "Name",
+    "paramType": "Type",
     "paramValue": "Value",
     "paramDesc": "Description",
     "results": "Return Fields",
