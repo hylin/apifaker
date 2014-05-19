@@ -79,10 +79,10 @@ router.route('/apis/add')
     db.apiList.insert(data, function(err, doc){
       if(err){
         console.log(err);
-        res.json({retcode:-1,retmsg:req.t('tips.saveSuccess')});
+        res.json({retcode:-1,retmsg:req.t('tips.saveFailed')});
         return;
       }
-      res.json({retcode:0,retmsg:req.t('tips.saveFailed')});
+      res.json({retcode:0,retmsg:req.t('tips.saveSuccess')});
     });
   });
 
