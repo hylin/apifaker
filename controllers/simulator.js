@@ -198,4 +198,31 @@ router.route('/simulator/delete/:id')
     });
   });
 
+/**
+ * copy simulator by id
+ */
+router.route('/simulator/copy/:id')
+  .get(function (req, res) {
+    var id = req.params.id;
+    db.simulators.findOne({_id: id}, function(err, doc){
+      if(err){
+        console.log(err);
+        res.json({retcode:-1,retmsg:req.t('tips.dbError')});
+        return;
+      }
+      doc.mark = doc.mark+' '+req.t('copy');
+      doc.updateTime = new Date();
+      doc._id = null;
+      delete doc._id;
+      db.simulators.insert(doc, function(err, doc){
+        if(err){
+          console.log(err);
+          res.json({retcode:-1,retmsg:req.t('tips.saveFailed')});
+          return;
+        }
+        res.json({retcode:0,retmsg:req.t('tips.saveSuccess')});
+      });
+    });
+  });
+
 module.exports = router;

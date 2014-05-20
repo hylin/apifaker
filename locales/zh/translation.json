@@ -18,6 +18,7 @@
   "status": "状态",
   "required": "必须",
   "optional": "可选",
+  "copy": "复制",
   "menus": {
     "list": "接口列表",
     "add": "添加接口"

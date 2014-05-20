@@ -18,6 +18,7 @@
   "status": "Status",
   "required": "Required",
   "optional": "Optional",
+  "copy": "Copy",
   "menus": {
     "list": "Api List",
     "add": "Add Api"

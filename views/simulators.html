@@ -39,7 +39,10 @@
                     });
                     %>
                 </p>
-                <span class="label label-danger" data-action="delete" data-id="<%=simulators[i]._id%>"><%=t("delete")%></span>
+                <div class="operations btn-group btn-group-xs">
+                    <button type="button" class="btn btn-primary" data-action="copy" data-id="<%=simulators[i]._id%>"><%=t("copy")%></button>
+                    <button type="button" class="btn btn-danger" data-action="delete" data-id="<%=simulators[i]._id%>"><%=t("delete")%></button>
+                </div>
             </div>
         </div>
     </div>
@@ -69,8 +72,25 @@
                         }
                     });
                     return false;
+                }).on('click', '[data-action="copy"]', function(){
+                    $.ajax({
+                        type: 'get',
+                        url: '<%=config.siteUrl+config.managerPath%>simulator/copy/'+$(this).data('id'),
+                        success: function(results){
+                            if(results.retcode == 0){
+                                alert('<%=t("tips.operationSuccess")%>');
+                                location.href = '<%=config.siteUrl+config.managerPath%>simulators/<%=apiInfo._id%>';
+                            }else{
+                                alert(results.retmsg || '<%=t("tips.operationFailed")%>');
+                            }
+                        },
+                        error: function(err){
+                            console.log(err);
+                            alert(err);
+                        }
+                    });
+                    return false;
                 });
-
             })();
         </script>
 <% include inc/footer.html %>
