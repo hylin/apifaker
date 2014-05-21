@@ -23,6 +23,8 @@
  * @date    2014-05-12
  */
 var config = {
+
+  staticVersion: '201405211040',
   //server's run port
   port: 80,
   //once you have gaven a project key,then you should never change it,however value is editable.
