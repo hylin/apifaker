@@ -110,7 +110,7 @@
             $.each(apiParams, function(i,v){
                 addParamRow();
                 $paramsWrapper.find('[name="param-name"]').eq(i).val(v.name);
-                $paramsWrapper.find('[name="param-desc"]').eq(i).val(v.desc);
+                $paramsWrapper.find('[name="param-desc"]').eq(i).val(v.desc).attr('data-original-title', v.desc);
                 $.each(simParams, function(j,r){
                     if(v.name == r.name){
                         $paramsWrapper.find('[name="param-value"]').eq(i).val(r.value);
@@ -118,6 +118,7 @@
                 });
             });
             $paramsWrapper.append('<span class="help-block"><%-t("help.simParams")%></span>');
+            $paramsWrapper.find('[name="param-desc"]').tooltip();
         }
 
 
@@ -157,7 +158,7 @@
                     +'<span class="input-group-addon"><%=t("api.paramValue")%></span>'
                     +'<input type="text" class="form-control"  value="" name="param-value">'
                     +'<span class="input-group-addon"><%=t("api.paramDesc")%></span>'
-                    +'<input type="text" class="form-control disabled" readonly value="" name="param-desc" required tabindex="-1">'
+                    +'<input type="text" class="form-control disabled" readonly value="" name="param-desc" required tabindex="-1" data-toggle="tooltip" data-original-title="" data-container="body">'
                     +'</div>';
             $paramsWrapper.append(addParamTpl);
         }
