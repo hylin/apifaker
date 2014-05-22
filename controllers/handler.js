@@ -153,21 +153,17 @@ router.route('*')
       var matchedApi = results.getByParams;
       if(!results.matchSimulator){
         //simulator match failed,in next step,we'll play as a proxy server role.
-        //if we matched a api and api's isProxy is false, we don't proxy query to actual server
-        if(config.proxy && matchedApi && matchedApi.isProxy) {
-          request({
+        //if we matched a api and it's isProxy is false, we don't proxy query to actual server
+        if(config.proxy && (!matchedApi || matchedApi && matchedApi.isProxy)) {
+          var requestObj = request.defaults({jar:true});
+          req.pipe(requestObj({
             method: req.method,
             uri: uri,
-            form: req.body
-          }, function(err, response, resBody){
-            if(err){
-              console.log('In Proxy.Url: '+ uri +'; form-data: '+util.inspect(req.body)+'. Error: '+util.inherits(err));
-              res.send('proxy error');
-            }else{
-              res.send(response.statusCode, resBody);
-              console.log('In Proxy.Url: '+ uri +'; form-data: '+util.inspect(req.body)+'. Success.');
-            }
-          });
+            headers: req.headers,
+            form: req.body,
+            followRedirect: true
+          })).pipe(res);
+
           console.log('In Proxy.Url: '+ uri +'; form-data: '+util.inspect(req.body));
         }else{
           console.log('Stop Proxy.Url: '+ uri +'; form-data: '+util.inspect(req.body));
