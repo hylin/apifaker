@@ -51,9 +51,9 @@ router.route('/robots.txt')
 router.route('*')
   .all(function (req, res, next) {
     var protocol = req.protocol,
-      host = protocol+ '://' +req.host,
+      host = protocol+ '://' +req.get('host'),
       path = req.path,
-      uri = req.protocol+'://'+req.host+req.originalUrl,
+      uri = req.protocol+'://'+req.get('host')+req.originalUrl,
       query = req.query,
       body = req.body,//handle post data
       params = {};
